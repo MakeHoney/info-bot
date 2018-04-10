@@ -137,25 +137,10 @@ require 'nokogiri'
 
 			2.times do |i|
 				retStr[i] += "#{@room[i]} 열람실의 이용 현황\n"
-				retStr[i] += "#{tmpBuff[i*2]} | #{tmpBuff[i*2 + 1]}\n\n"
+				retStr[i] += "#{tmpBuff[i*2]} | #{tmpBuff[i*2 + 1]}"
 			end
 
 			return retStr
 		end
 	end
 end
-# test = Crawler::SchoolFood.new()
-# test.dormFoodCourt
-
-# test = Crawler::Notice.new('home')
-# # 시나리오
-# # 카카오 유저로부터 "장학"선택을 받음 => Crawler::Notice.new('scholarship')
-# # 카카오 유저키를 id로 유저 db에 접근하여 장학에 해당하는 integer value를 가져옴
-# test.printNotice(6893)
-# # test.printNotice(DB로부터 가져온 value를 인자로 넣음)
-
-test = Crawler::Vacancy.new()
-test.printVacancy
-# test.printVacancy.each do |page|
-# 	puts page
-# end

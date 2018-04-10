@@ -35,7 +35,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"]
+					buttons: ["C1", "D1", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -48,7 +48,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"]
+					buttons: ["C1", "D1", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -73,7 +73,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "기숙사식당", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json:@msg, status: :ok
@@ -86,7 +86,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "기숙사식당", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json:@msg, status: :ok
@@ -94,8 +94,8 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("처음으로")
 			@msg = {
 				message: {
-					text: "go first."
-				},
+					text: "원하는 기능을 선택해 주세요!"
+					},
 				keyboard: {
 					type: "buttons",
 					buttons: ["도서관 여석 확인", "오늘의 학식", "처음으로"]
