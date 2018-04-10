@@ -9,7 +9,10 @@ class SpidersController < ApplicationController
 	end
 
 	def chat
-		# food = Crawler::SchoolFood.new()
+		food = Crawler::SchoolFood.new()
+		notice = Crawler::Notice.new()
+		vacancy = Crawler::Vacancy.new()
+		
 		@res = params[:content]
 		@user_key = params[:user_key]
  
@@ -27,14 +30,36 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("오늘의 학식")
 			@msg = {
 				message: {
-					text: "2번을 선택하셨네요."
+					text: "식당을 선택해주세요!"
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"]
+					buttons: ["학생식당", "기숙사식당"]
 				}
 			}
 			render json: @msg, status: :ok
+		elsif @res.eql?("학생식당")
+			@msg = {
+				message: {
+					text: food.studentFoodCourt
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["처음으로"] # 추후 뒤로가기 구현
+				}
+			}
+			render json:@msg, status: :ok
+		elsif @res.eql?("기숙사식당")
+			@msg = {
+				message: {
+					text: food.dormFoodCourt
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["처음으로"] # 추후 뒤로가기 구현
+				}
+			}
+			render json:@msg, status: :ok
 		elsif @res.eql?("처음으로")
 			@msg = {
 				message: {

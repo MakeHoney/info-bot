@@ -20,8 +20,9 @@ require 'nokogiri'
 		
 		def studentFoodCourt
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
-				puts li.text
-			end	
+				retStr += "#{li.text}\n"
+			end
+			return retStr
 		end
 
 		def dormFoodCourt
@@ -33,7 +34,7 @@ require 'nokogiri'
 				@page.css('table.ajou_table')[1].
 				css('td.no_right')[i + 1].		# 아침 점심 저녁 선택자
 				css('li').each do |li|
-					retStr += li.text
+					retStr += "#{li.text}\n"
 				end	
 				retStr += "\n\n"
 			end
