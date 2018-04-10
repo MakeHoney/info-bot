@@ -1,24 +1,26 @@
+require 'crawler'
 class SpidersController < ApplicationController
 		def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["1", "2", "3"]
+			buttons: ["도서관 여석 확인", "오늘의 학식", "처음으로"]
 		}
 		render json: @msg, status: :ok
 	end
 
 	def chat
+		food = Crawler::SchoolFood.new()
 		@res = params[:content]
 		@user_key = params[:user_key]
  
-		if @res == "1"
+		if @res.eql?("도서관 여석 확인")
 			@msg = {
 				message: {
-					text: "1번을 선택하셨네요."
+					text: food.dormFoodCourt
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["5", "6", "2"]
+					buttons: ["처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
