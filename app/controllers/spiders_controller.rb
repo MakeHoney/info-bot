@@ -9,9 +9,8 @@ class SpidersController < ApplicationController
 	end
 
 	def chat
-		food = Crawler::SchoolFood.new()
-		notice = Crawler::Notice.new()
-		vacancy = Crawler::Vacancy.new()
+		# notice = Crawler::Notice.new()
+		# vacancy = Crawler::Vacancy.new()
 		
 		@res = params[:content]
 		@user_key = params[:user_key]
@@ -19,7 +18,20 @@ class SpidersController < ApplicationController
 		if @res.eql?("도서관 여석 확인")
 			@msg = {
 				message: {
-					text: "not yet"
+					text: "열람실을 선택해주세요!"
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["C1", "D1", "처음으로"]
+				}
+			}
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("C1")
+			vacancy = Crawler::Vacancy.new()
+			@msg = {
+				message: {
+					text: vacancy.printVacancy[0]
 				},
 				keyboard: {
 					type: "buttons",
@@ -27,6 +39,20 @@ class SpidersController < ApplicationController
 				}
 			}
 			render json: @msg, status: :ok
+
+		elsif @res.eql?("D1")
+			vacancy = Crawler::Vacancy.new()
+			@msg = {
+				message: {
+					text: vacancy.printVacancy[1]
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["처음으로"]
+				}
+			}
+			render json: @msg, status: :ok
+
 		elsif @res.eql?("오늘의 학식")
 			@msg = {
 				message: {
@@ -34,11 +60,13 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당"]
+					buttons: ["학생식당", "기숙사식당", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
+
 		elsif @res.eql?("학생식당")
+			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
 					text: food.studentFoodCourt
@@ -49,7 +77,9 @@ class SpidersController < ApplicationController
 				}
 			}
 			render json:@msg, status: :ok
+
 		elsif @res.eql?("기숙사식당")
+			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
 					text: food.dormFoodCourt
@@ -60,6 +90,7 @@ class SpidersController < ApplicationController
 				}
 			}
 			render json:@msg, status: :ok
+
 		elsif @res.eql?("처음으로")
 			@msg = {
 				message: {

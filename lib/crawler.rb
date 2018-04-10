@@ -19,16 +19,22 @@ require 'nokogiri'
 		end
 		
 		def studentFoodCourt
+			retStr = ""
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
 				retStr += "#{li.text}\n"
 			end
-			return retStr
+
+			if retStr.empty?
+				return "등록된 식단이 없습니다."
+			else
+				return retStr
+			end
 		end
 
 		def dormFoodCourt
 			retStr = ""
-
 			time = ['아침', '점심', '저녁']
+
 			3.times do |i|
 				puts "******** #{time[i]} ********\n"
 				@page.css('table.ajou_table')[1].
@@ -117,21 +123,24 @@ require 'nokogiri'
 			end
 		end
 		def printVacancy
-			retStr = ['', '', '', '']
+			retStr = ['', '']
+			tmpBuff = ['', '', '', '']
 			2.times do |i|	# C1, D1
 			tmp = @pages[i].css('td[valign="middle"]')[1].text.split
 				5.times do |j|
-					retStr[0 + 2*i] += tmp[4 + j]
+					tmpBuff[0 + 2*i] += tmp[4 + j]
 				end
 				3.times do |j|
-					retStr[1 + 2*i] += tmp[10 + j]
+					tmpBuff[1 + 2*i] += tmp[10 + j]
 				end
 			end
 
 			2.times do |i|
-				puts "#{@room[i]} 열람실의 이용 현황"
-				print "#{retStr[i]} | #{retStr[i + 1]}\n\n"
+				retStr[i] += "#{@room[i]} 열람실의 이용 현황\n"
+				retStr[i] += "#{tmpBuff[i*2]} | #{tmpBuff[i*2 + 1]}\n\n"
 			end
+
+			return retStr
 		end
 	end
 end
