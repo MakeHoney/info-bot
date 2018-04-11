@@ -93,7 +93,7 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("조식")
+		elsif @res.eql?("조식") && !@@flag_faculty
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -106,7 +106,7 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("중식")
+		elsif @res.eql?("중식") && !@@flag_faculty
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -119,7 +119,7 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("석식")
+		elsif @res.eql?("석식") && !@@flag_faculty
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
