@@ -61,7 +61,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["조식", "중식", "석식"] # 추후 뒤로가기 구현
+					buttons: ["조식", "중식", "석식", "분식"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
