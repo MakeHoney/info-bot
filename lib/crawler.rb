@@ -59,7 +59,7 @@ require 'nokogiri'
 			return retStr
 		end
 
-		def facultyFoodCourt
+		def facultyFoodCourt	# 식단이 없을 시 예외처리 추가 
 			retStr = ['', '']
 
 			2.times do |i|

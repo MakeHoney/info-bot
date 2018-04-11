@@ -151,7 +151,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["[교]중식", "[교]석식"]
+					buttons: ["[교]중식", "[교]석식", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
