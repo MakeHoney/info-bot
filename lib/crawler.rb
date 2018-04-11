@@ -155,7 +155,7 @@ require 'nokogiri'
 				retStr += "  * 남은 자리 : #{tmp[6]}\n"
 				retStr += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})\n\n"
 			end
-			retStr.chomp!
+			2.times { retStr.chomp! } 
 			return retStr
 		end
 	end
