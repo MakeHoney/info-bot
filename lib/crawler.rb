@@ -35,7 +35,8 @@ require 'nokogiri'
 				flag += 1
 				# puts li.text
 			end
-
+			
+			retStr.chomp!
 			if retStr.empty?
 				return "등록된 식단이 없습니다."
 			else
@@ -55,6 +56,7 @@ require 'nokogiri'
 					retStr[i] += "#{li.text}\n"
 					flag += 1
 				end	
+				retStr[i].chomp!
 			end
 			return retStr
 		end
@@ -68,6 +70,7 @@ require 'nokogiri'
 				css('li').each do |li|
 					retStr[i] += "#{li.text}\n"
 				end	
+				retStr[i].chomp!
 			end
 			return retStr
 		end

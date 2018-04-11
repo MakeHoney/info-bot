@@ -48,7 +48,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["D1", "처음으로"]
+					buttons: ["C1", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -151,7 +151,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["[교]중식", "[교]석식", "처음으로"]
+					buttons: ["[교]중식", "[교]석식"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -181,6 +181,7 @@ class SpidersController < ApplicationController
 				}
 			}
 			render json: @msg, status: :ok
+
 		elsif @res.eql?("처음으로")
 			@msg = {
 				message: {
