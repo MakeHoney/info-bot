@@ -61,7 +61,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "교직원식당" "처음으로"]
+					buttons: ["학생식당", "기숙사식당", "교직원식당", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -114,7 +114,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "교직원식당", "중식", "석식", "처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "교직원식당", "조식", "석식", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
@@ -127,7 +127,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "교직원식당", "중식", "석식", "처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "교직원식당", "조식", "중식", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
