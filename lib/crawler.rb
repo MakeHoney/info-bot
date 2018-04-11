@@ -146,14 +146,16 @@ require 'nokogiri'
 				@pages << Nokogiri::HTML(html)
 			end
 		end
+		
 		def printVacancy
-			retStr = ['', '']
+			retStr = ""
 			2.times do |i|	# C1, D1
 			tmp = @pages[i].css('td[valign="middle"]')[1].text.split
-				retStr[i] += "◆ #{@room[i]} 열람실의 이용 현황\n\n"
-				retStr[i] += "  * 남은 자리 : #{tmp[6]}\n"
-				retStr[i] += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})"
+				retStr += "◆ #{@room[i]} 열람실의 이용 현황\n\n"
+				retStr += "  * 남은 자리 : #{tmp[6]}\n"
+				retStr += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})\n\n"
 			end
+			retStr.chomp!
 			return retStr
 		end
 	end
