@@ -124,22 +124,12 @@ require 'nokogiri'
 		end
 		def printVacancy
 			retStr = ['', '']
-			tmpBuff = ['', '', '', '']
 			2.times do |i|	# C1, D1
 			tmp = @pages[i].css('td[valign="middle"]')[1].text.split
-				5.times do |j|
-					tmpBuff[0 + 2*i] += tmp[4 + j]
-				end
-				3.times do |j|
-					tmpBuff[1 + 2*i] += tmp[10 + j]
-				end
+				retStr[i] += "◆ #{@room[i]} 열람실의 이용 현황\n\n"
+				retStr[i] += "  * 남은 자리 : #{tmp[6]}\n"
+				retStr[i] += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})"
 			end
-
-			2.times do |i|
-				retStr[i] += "#{@room[i]} 열람실의 이용 현황\n"
-				retStr[i] += "#{tmpBuff[i*2]} | #{tmpBuff[i*2 + 1]}"
-			end
-
 			return retStr
 		end
 	end

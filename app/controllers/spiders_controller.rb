@@ -3,7 +3,7 @@ class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식", "처음으로"]
+			buttons: ["도서관 여석 확인", "오늘의 학식"]
 		}
 		render json: @msg, status: :ok
 	end
@@ -98,7 +98,7 @@ class SpidersController < ApplicationController
 					},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식", "처음으로"]
+					buttons: ["도서관 여석 확인", "오늘의 학식"]
 				}
 			}
 			render json: @msg, status: :ok
