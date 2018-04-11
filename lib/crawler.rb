@@ -35,14 +35,16 @@ require 'nokogiri'
 			retStr = ['', '', '']
 
 			3.times do |i|
+				flag = 0
 				@page.css('table.ajou_table')[1].
 				css('td.no_right')[i + 1].		# 아침 점심 저녁 선택자
 				css('li').each do |li|
-					retStr[i] += "\n" if "#{li.text}".include?("<") || "#{li.text}".include?(">")
-
+					retStr[i] += "\n" if ("#{li.text}".include?("<") || "#{li.text}".include?(">")) && flag != 0
 					retStr[i] += "#{li.text}\n"
+					flag += 1
 				end	
 			end
+			
 			return retStr
 		end
 
