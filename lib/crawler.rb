@@ -32,17 +32,15 @@ require 'nokogiri'
 		end
 
 		def dormFoodCourt
-			retStr = ""
+			retStr = ['', '', '']
 			time = ['아침', '점심', '저녁']
 
 			3.times do |i|
-				puts "******** #{time[i]} ********\n"
 				@page.css('table.ajou_table')[1].
 				css('td.no_right')[i + 1].		# 아침 점심 저녁 선택자
 				css('li').each do |li|
-					retStr += "#{li.text}\n"
+					retStr[i] += "#{li.text}\n"
 				end	
-				retStr += "\n\n"
 			end
 			return retStr
 		end
