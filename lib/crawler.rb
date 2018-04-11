@@ -3,10 +3,10 @@ require 'nokogiri'
 
 	# f = File.open('test.txt', 'w')
 	# f.puts @html #	파일 입출력을 이용하여 문서 디버깅
-	module Crawler
-		class SchoolFood
-			# @page
-			def initialize
+module Crawler
+	class SchoolFood
+		# @page
+		def initialize
 				url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
 				html = fixHtml(open(url).read)
 			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
@@ -28,19 +28,19 @@ require 'nokogiri'
 		end
 	end
 
-	def studentFoodCourt
-		retStr = ""
-		flag = 0
-		@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
-			retStr += "\n" if partition(li.text) && flag != 0
-			retStr += "#{li.text}\n"
-			flag += 1
+		def studentFoodCourt
+			retStr = ""
+			flag = 0
+			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
+				retStr += "\n" if partition(li.text) && flag != 0
+				retStr += "#{li.text}\n"
+				flag += 1
 				# puts li.text
 			end
-
+			
 			retStr.chomp!
 			if retStr.empty?
-				return "아직 식단이 등록되지 않았어요!"
+				return "식단이 등록되지 않았어요!"
 			else
 				return retStr
 			end
