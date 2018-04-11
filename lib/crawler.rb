@@ -6,9 +6,9 @@ require 'nokogiri'
 	module Crawler
 		class SchoolFood
 			# @page
-		def initialize
-			url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
-			html = fixHtml(open(url).read)
+			def initialize
+				url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
+				html = fixHtml(open(url).read)
 			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
 			@page = Nokogiri::HTML(html)
 		end
@@ -22,22 +22,22 @@ require 'nokogiri'
 			if (string.include?("<") || string.include?(">") || 
 				(string.include?("운영") && string.include?("시간")) || 
 				string.include?("Burger")) # && !string.include?("택") 을 넣을까..?
-				return true
-			else
-				return false
-			end
+			return true
+		else
+			return false
 		end
+	end
 
-		def studentFoodCourt
-			retStr = ""
-			flag = 0
-			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
-				retStr += "\n" if partition(li.text) && flag != 0
-				retStr += "#{li.text}\n"
-				flag += 1
+	def studentFoodCourt
+		retStr = ""
+		flag = 0
+		@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
+			retStr += "\n" if partition(li.text) && flag != 0
+			retStr += "#{li.text}\n"
+			flag += 1
 				# puts li.text
 			end
-			
+
 			retStr.chomp!
 			if retStr.empty?
 				return "아직 식단이 등록되지 않았어요!"
@@ -48,33 +48,58 @@ require 'nokogiri'
 
 		def dormFoodCourt
 			retStr = ['', '', '', '']
+			set = ['아침', '점심', '저녁', '분식']
+			cnt = 0
 
 			4.times do |i|
 				flag = 0
-				@page.css('table.ajou_table')[1].
-				css('td.no_right')[i + 1].		# 아침 점심 저녁 선택자
-				css('li').each do |li|
-					retStr[i] += "\n" if partition(li.text) && flag != 0
-					retStr[i] += "#{li.text}\n"
-					flag += 1
-				end	
+				# 식단이 등록되어 있지 않은 경우 예외처리 => 변수 cnt와 xpath 이용
+				# xpath는 index가 1부터 시작한다.
+				length_for_exption = 
+				@page.xpath("//table[@class='ajou_table'][2]
+								//td[contains(text(), \"#{set[i]}\")]").length
+
+				if length_for_exption == 0
+					retStr[i] = "식단이 등록되지 않았어요!"
+					cnt -= 1
+				else
+					@page.css('table.ajou_table')[1].
+					css('td.no_right')[cnt + 1].		# 아침 점심 저녁 선택자
+					css('li').each do |li|
+						retStr[i] += "\n" if partition(li.text) && flag != 0
+						retStr[i] += "#{li.text}\n"
+						flag += 1
+					end
+				end
+
+				cnt += 1	
 				retStr[i].chomp!
-				retStr[i] = "아직 식단이 등록되지 않았어요!" if retStr[i].empty?
 			end
 			return retStr
 		end
 
-		def facultyFoodCourt	# 식단이 없을 시 예외처리 추가 
+		def facultyFoodCourt		# 식단이 없을 시 예외처리 추가
 			retStr = ['', '']
+			set = ['점심', '저녁']
+			cnt = 0
 
 			2.times do |i|
-				@page.css('table.ajou_table')[2].
-				css('td.no_right')[i + 1].		
-				css('li').each do |li|
-					retStr[i] += "#{li.text}\n"
-				end	
+
+				length_for_exption = 
+				@page.xpath("//table[@class='ajou_table'][3]
+								//td[contains(text(), \"#{set[i]}\")]").length
+				
+				if length_for_exption == 0
+					retStr[i] = "식단이 등록되지 않았어요!"
+				else
+					@page.css('table.ajou_table')[2].
+					css('td.no_right')[cnt + 1].		
+					css('li').each do |li|
+						retStr[i] += "#{li.text}\n"
+					end	
+				end
+				cnt += 1
 				retStr[i].chomp!
-				retStr[i] = "아직 식단이 등록되지 않았어요!" if retStr[i].empty?
 			end
 			return retStr
 		end
@@ -152,7 +177,7 @@ require 'nokogiri'
 		def printVacancy
 			retStr = ""
 			2.times do |i|	# C1, D1
-			tmp = @pages[i].css('td[valign="middle"]')[1].text.split
+				tmp = @pages[i].css('td[valign="middle"]')[1].text.split
 				retStr += "◆ #{@room[i]} 열람실의 이용 현황\n"
 				retStr += "  * 남은 자리 : #{tmp[6]}\n"
 				retStr += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})\n\n"
