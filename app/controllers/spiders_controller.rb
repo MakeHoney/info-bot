@@ -1,6 +1,5 @@
 require 'crawler'
 class SpidersController < ApplicationController
-	@@flag_faculty# 교직원식당이 점심저녁 선택에관한 flag
 	def keyboard
 		@msg = {
 			type: "buttons",
@@ -81,10 +80,9 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("기숙사식당")
 			food = Crawler::SchoolFood.new()
-			@@flag_faculty = false
 			@msg = {
 				message: {
-					text: "시간대를 선택해 주세요."
+					text: "시간대를 선택해 주세요!"
 				},
 				keyboard: {
 					type: "buttons",
@@ -93,7 +91,7 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("조식") && !@@flag_faculty
+		elsif @res.eql?("조식")
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -101,12 +99,12 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "교직원식당", "중식", "석식", "처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "교직원식당", "중식", "석식", "분식", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("중식") && !@@flag_faculty
+		elsif @res.eql?("중식")
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -114,12 +112,12 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "교직원식당", "조식", "석식", "처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "교직원식당", "조식", "석식", "분식", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("석식") && !@@flag_faculty
+		elsif @res.eql?("석식")
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -127,26 +125,38 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "교직원식당", "조식", "중식", "처음으로"] # 추후 뒤로가기 구현
+					buttons: ["학생식당", "교직원식당", "조식", "중식", "분식", "처음으로"] # 추후 뒤로가기 구현
+				}
+			}
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("분식")
+			food = Crawler::SchoolFood.new()
+			@msg = {
+				message: {
+					text: food.dormFoodCourt[3]
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["학생식당", "교직원식당", "조식", "중식", "석식", "처음으로"] # 추후 뒤로가기 구현
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
 			food = Crawler::SchoolFood.new()
-			@@flag_faculty = true
 			@msg = {
 				message: {
-					text: "시간대를 선택해 주세요."
+					text: "시간대를 선택해 주세요!"
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["중식", "석식"]
+					buttons: ["[교]중식", "[교]석식"]
 				}
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("중식") && @@flag_faculty
+		elsif @res.eql?("[교]중식")
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -154,12 +164,12 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "석식", "처음으로"]
+					buttons: ["학생식당", "기숙사식당", "[교]석식", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("석식") && @@flag_faculty
+		elsif @res.eql?("[교]석식")
 			food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
@@ -167,7 +177,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "중식", "처음으로"]
+					buttons: ["학생식당", "기숙사식당", "[교]중식", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
