@@ -23,7 +23,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["처음으로"]
+					buttons: ["도서관 여석 확인", "오늘의 학식"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -139,7 +139,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "[교]석식", "처음으로"]
+					buttons: ["학생식당", "기숙사식당", "교직원식당", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -152,7 +152,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "[교]중식", "처음으로"]
+					buttons: ["학생식당", "기숙사식당", "교직원식당", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
