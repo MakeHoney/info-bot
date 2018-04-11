@@ -18,10 +18,22 @@ require 'nokogiri'
 			html.gsub!(/[가-힣]>/) {|s| s = s[0] + '&gt;'}
 		end
 		
+		def partition(string)
+			if string.include?("<") || string.include?(">") || string.include?("운영")
+				return true
+			else
+				return false
+			end
+		end
+
 		def studentFoodCourt
 			retStr = ""
+			flag = 0
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
+				retStr += "\n" if partition(li.text) && flag != 0
 				retStr += "#{li.text}\n"
+				flag += 1
+				# puts li.text
 			end
 
 			if retStr.empty?
@@ -32,26 +44,32 @@ require 'nokogiri'
 		end
 
 		def dormFoodCourt
-			retStr = ['', '', '']
+			retStr = ['', '', '', '']
 
-			3.times do |i|
+			4.times do |i|
 				flag = 0
 				@page.css('table.ajou_table')[1].
 				css('td.no_right')[i + 1].		# 아침 점심 저녁 선택자
 				css('li').each do |li|
-					retStr[i] += "\n" if ("#{li.text}".include?("<") || "#{li.text}".include?(">")) && flag != 0
+					retStr[i] += "\n" if partition(li.text) && flag != 0
 					retStr[i] += "#{li.text}\n"
 					flag += 1
 				end	
 			end
-			
 			return retStr
 		end
 
-		def wholeList
-			@page.css('table.ajou_table li').each do |li|
-				puts li.text
-			end		
+		def facultyFoodCourt
+			retStr = ['', '']
+
+			2.times do |i|
+				@page.css('table.ajou_table')[2].
+				css('td.no_right')[i + 1].		
+				css('li').each do |li|
+					retStr[i] += "#{li.text}\n"
+				end	
+			end
+			return retStr
 		end
 	end
 
