@@ -40,7 +40,7 @@ require 'nokogiri'
 			
 			retStr.chomp!
 			if retStr.empty?
-				return "등록된 식단이 없습니다."
+				return "아직 식단이 등록되지 않았어요!"
 			else
 				return retStr
 			end
@@ -59,6 +59,7 @@ require 'nokogiri'
 					flag += 1
 				end	
 				retStr[i].chomp!
+				retStr[i] = "아직 식단이 등록되지 않았어요!" if retStr[i].empty?
 			end
 			return retStr
 		end
@@ -73,6 +74,7 @@ require 'nokogiri'
 					retStr[i] += "#{li.text}\n"
 				end	
 				retStr[i].chomp!
+				retStr[i] = "아직 식단이 등록되지 않았어요!" if retStr[i].empty?
 			end
 			return retStr
 		end
