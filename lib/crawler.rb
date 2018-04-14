@@ -7,8 +7,8 @@ module Crawler
 	class SchoolFood
 		# @page
 		def initialize
-				url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
-				html = fixHtml(open(url).read)
+			url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
+			html = fixHtml(open(url).read)
 			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
 			@page = Nokogiri::HTML(html)
 		end
@@ -34,7 +34,7 @@ module Crawler
 	end
 
 		def studentFoodCourt
-			retStr = ""
+			retStr = ''
 			flag = 0
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
 				retStr += "\n" if partition(li.text) && flag != 0
@@ -42,17 +42,18 @@ module Crawler
 				flag += 1
 				# puts li.text
 			end
-			
+
 			retStr.chomp!
 			if retStr.empty?
-				return "식단이 등록되지 않았어요!"
+				return false
+				# return "식단이 등록되지 않았어요!"
 			else
 				return retStr
 			end
 		end
 
 		def dormFoodCourt
-			retStr = ['', '', '', '']
+			retStr = ['', '', '', '', false]
 			set = ['아침', '점심', '저녁', '분식']
 			cnt = 0
 
@@ -62,10 +63,9 @@ module Crawler
 				# xpath는 index가 1부터 시작한다.
 				length_for_exption = 
 				@page.xpath("//table[@class='ajou_table'][2]
-								//td[contains(text(), \"#{set[i]}\")]").length
-
+					//td[contains(text(), \"#{set[i]}\")]").length
 				if length_for_exption == 0
-					retStr[i] = "식단이 등록되지 않았어요!"
+					retStr[i] = nil# "식단이 등록되지 않았어요!"
 					cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
@@ -78,13 +78,14 @@ module Crawler
 				end
 
 				cnt += 1	
-				retStr[i].chomp!
+				retStr[4] = true unless retStr[i].nil?
+				retStr[i].chomp! unless retStr[i].nil?
 			end
 			return retStr
 		end
 
-		def facultyFoodCourt		# 식단이 없을 시 예외처리 추가
-			retStr = ['', '']
+		def facultyFoodCourt		
+			retStr = ['', '', false]
 			set = ['점심', '저녁']
 			cnt = 0
 
@@ -92,10 +93,10 @@ module Crawler
 
 				length_for_exption = 
 				@page.xpath("//table[@class='ajou_table'][3]
-								//td[contains(text(), \"#{set[i]}\")]").length
+					//td[contains(text(), \"#{set[i]}\")]").length
 				
 				if length_for_exption == 0
-					retStr[i] = "식단이 등록되지 않았어요!"
+					retStr[i] = nil # "식단이 등록되지 않았어요!"
 				else
 					@page.css('table.ajou_table')[2].
 					css('td.no_right')[cnt + 1].		
@@ -104,7 +105,8 @@ module Crawler
 					end	
 				end
 				cnt += 1
-				retStr[i].chomp!
+				retStr[2] = true unless retStr[i].nil?
+				retStr[i].chomp! unless retStr[i].nil?
 			end
 			return retStr
 		end

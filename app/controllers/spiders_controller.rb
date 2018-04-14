@@ -1,4 +1,5 @@
 require 'crawler'
+
 class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
@@ -29,15 +30,36 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("오늘의 학식")
+			food = Crawler::SchoolFood.new()
+			retValue = [
+				food.studentFoodCourt,
+				food.dormFoodCourt[4],
+				food.facultyFoodCourt[2]
+			]
+			tmpBuff = ["학생식당", "기숙사식당", "교직원식당"]
+			dynamicButtons = ["처음으로"]
+			dynamicText = "오늘은 식당을 운영하지 않습니다."
+			cnt = 0; i = 0
+
+			retValue.each do |elem|
+				if !elem
+					dynamicButtons.insert(cnt, tmpBuff[i])
+					dynamicText = "식당을 선택해주세요!"
+					cnt += 1
+				end
+				i += 1
+			end
+
 			@msg = {
 				message: {
-					text: "식당을 선택해주세요!"
+					text: dynamicText
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["학생식당", "기숙사식당", "교직원식당", "처음으로"]
+					buttons: dynamicButtons
 				}
 			}
+
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("학생식당")
@@ -54,7 +76,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("기숙사식당")
-			food = Crawler::SchoolFood.new()
+			# food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
 					text: "시간대를 선택해 주세요!"
@@ -119,7 +141,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
-			food = Crawler::SchoolFood.new()
+			# food = Crawler::SchoolFood.new()
 			@msg = {
 				message: {
 					text: "시간대를 선택해 주세요!"
