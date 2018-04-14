@@ -2,6 +2,20 @@ require 'crawler'
 
 class SpidersController < ApplicationController
 
+	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText)
+		cnt = 0; i = 0
+
+		flags.each do |elem|
+			if elem
+				dynamicButtons.insert(cnt, tmpBuff[i])
+				dynamicText.replace("식당을 선택해주세요!") unless dynamic.nil?
+				cnt += 1
+			end
+			i += 1
+		end
+		return dynamicButtons
+	end
+
 	def keyboard
 		@msg = {
 			type: "buttons",
@@ -13,7 +27,7 @@ class SpidersController < ApplicationController
 	def chat
 		# notice = Crawler::Notice.new()
 		# vacancy = Crawler::Vacancy.new()
-		dButtons = food.dynamic(
+		dButtons = dynamic(
 			[food.studentFoodCourt,
 			food.dormFoodCourt[4],
 			food.facultyFoodCourt[2]],
@@ -39,7 +53,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("오늘의 학식")
 			food = Crawler::SchoolFood.new()
 			dynamicText = "오늘은 식당을 운영하지 않습니다."
-			dynamicButtons = food.dynamic(
+			dynamicButtons = dynamic(
 				[food.studentFoodCourt,
 				food.dormFoodCourt[4],
 				food.facultyFoodCourt[2]],
@@ -61,7 +75,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("학생식당")
 			food = Crawler::SchoolFood.new()
 			dynamicText = "다른 식당은 운영하지 않습니다."
-			dynamicButtons = food.dynamic(
+			dynamicButtons = dynamic(
 				[food.dormFoodCourt[4],
 				food.facultyFoodCourt[2]],
 				["기숙사식당", "교직원식당"],
@@ -80,10 +94,10 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("기숙사식당")
 			food = Crawler::SchoolFood.new()
-			dynamicButtons = food.dynamic(
+			dynamicButtons = dynamic(
 				[food.dormFoodCourt[0],
 				food.dormFoodCourt[1],
-				food.dormFoodCourt[2]
+				food.dormFoodCourt[2],
 				food.dormFoodCourt[3]],
 				["조식", "중식", "석식", "분식"],
 				["처음으로"], nil)
@@ -157,7 +171,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("교직원식당")
 			food = Crawler::SchoolFood.new()
-			dynamicButtons = food.dynamic(
+			dynamicButtons = dynamic(
 				[food.facultyFoodCourt[0],
 				food.facultyFoodCourt[1]],
 				["[교]중식", "[교]석식"],
