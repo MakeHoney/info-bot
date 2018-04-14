@@ -41,16 +41,49 @@ class SpidersController < ApplicationController
 		@user_key = params[:user_key]
  
 		if @res.eql?("도서관 여석 확인")
-			vacancy = Crawler::Vacancy.new()
 			@msg = {
 				message: {
-					text: vacancy.printVacancy
+					text: "열람실을 선택해 주세요!"
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식"]
+					buttons: ["C1 열람실", "D1 열람실"]
 				}
 			}
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("C1 열람실")
+			vacancy = Crawler::Vacancy.new()
+			@msg = {
+				message: {
+					text: vacancy.printVacancy[0],
+					photo: {
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png",
+					}
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["D1 열람실", "처음으로"]
+				}
+			}
+
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("D1 열람실")
+			vacancy = Crawler::Vacancy.new()
+			@msg = {
+				message: {
+					text: vacancy.printVacancy[1],
+					photo: {
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png",
+					}
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["C1 열람실", "처음으로"]
+				}
+			}
+
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("오늘의 학식")
