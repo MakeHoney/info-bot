@@ -2,13 +2,13 @@ require 'crawler'
 
 class SpidersController < ApplicationController
 
-	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText)
+	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText = false)
 		cnt = 0; i = 0
 
 		flags.each do |elem|
 			if elem
 				dynamicButtons.insert(cnt, tmpBuff[i])
-				dynamicText.replace("식당을 선택해주세요!") unless dynamicText.nil?
+				dynamicText.replace("식당을 선택해주세요!") if dynamicText
 				cnt += 1
 			end
 			i += 1
@@ -26,13 +26,13 @@ class SpidersController < ApplicationController
 
 	def chat
 		# notice = Crawler::Notice.new()
-		# vacancy = Crawler::Vacancy.new()
+		food_global = Crawler::SchoolFood.new()
 		dButtons = dynamic(
-			[food.studentFoodCourt,
-			food.dormFoodCourt[4],
-			food.facultyFoodCourt[2]],
+			[food_global.studentFoodCourt,
+			food_global.dormFoodCourt[4],
+			food_global.facultyFoodCourt[2]],
 			["학생식당", "기숙사식당", "교직원식당"],
-			["처음으로"], nil)
+			["처음으로"])
 		
 		@res = params[:content]
 		@user_key = params[:user_key]
@@ -100,7 +100,7 @@ class SpidersController < ApplicationController
 				food.dormFoodCourt[2],
 				food.dormFoodCourt[3]],
 				["조식", "중식", "석식", "분식"],
-				["처음으로"], nil)
+				["처음으로"])
 
 			@msg = {
 				message: {
@@ -175,7 +175,7 @@ class SpidersController < ApplicationController
 				[food.facultyFoodCourt[0],
 				food.facultyFoodCourt[1]],
 				["[교]중식", "[교]석식"],
-				["처음으로"], nil)
+				["처음으로"])
 
 			@msg = {
 				message: {
