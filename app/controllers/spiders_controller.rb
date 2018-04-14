@@ -8,7 +8,7 @@ class SpidersController < ApplicationController
 		flags.each do |elem|
 			if elem
 				dynamicButtons.insert(cnt, tmpBuff[i])
-				dynamicText.replace("식당을 선택해주세요!") unless dynamic.nil?
+				dynamicText.replace("식당을 선택해주세요!") unless dynamicText.nil?
 				cnt += 1
 			end
 			i += 1
