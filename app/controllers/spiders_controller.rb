@@ -87,7 +87,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dynamicText
+					buttons: dynamicButtons
 				}
 			}
 			render json: @msg, status: :ok
