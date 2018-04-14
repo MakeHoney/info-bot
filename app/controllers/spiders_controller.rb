@@ -101,7 +101,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("조식")
 			food = Crawler::SchoolFood.new()
-			dynamicText = "error"
+			dynamicText = "none"
 			dynamicButtons = dynamic(
 				[food.studentFoodCourt,
 				food.dormFoodCourt[4],
@@ -111,7 +111,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: food.dormFoodCourt[0]
 				},
 				keyboard: {
 					type: "buttons",
@@ -122,7 +122,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("중식")
 			food = Crawler::SchoolFood.new()
-			dynamicText = "error"
+			dynamicText = "none"
 			dynamicButtons = dynamic(
 				[food.studentFoodCourt,
 				food.dormFoodCourt[4],
@@ -132,7 +132,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: food.dormFoodCourt[1]
 				},
 				keyboard: {
 					type: "buttons",
@@ -143,7 +143,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("석식")
 			food = Crawler::SchoolFood.new()
-			dynamicText = "error"
+			dynamicText = "none"
 			dynamicButtons = dynamic(
 				[food.studentFoodCourt,
 				food.dormFoodCourt[4],
@@ -153,7 +153,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: food.dormFoodCourt[2]
 				},
 				keyboard: {
 					type: "buttons",
@@ -164,7 +164,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("분식")
 			food = Crawler::SchoolFood.new()
-			dynamicText = "error"
+			dynamicText = "none"
 			dynamicButtons = dynamic(
 				[food.studentFoodCourt,
 				food.dormFoodCourt[4],
@@ -174,7 +174,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: food.dormFoodCourt[3]
 				},
 				keyboard: {
 					type: "buttons",
