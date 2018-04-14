@@ -78,6 +78,10 @@ module Crawler
 				end
 
 				cnt += 1	
+				# 아침, 점심, 저녁, 분식 중 하나라도 식단이 존재하면
+				# retStr[4]의 값을 true로 변경한다. 다시말해서, 
+				# 모든 시간대의 식단이 없으면 retStr[4]의 값은 false이다.
+				# facultyFoodCourt() 메소드에서도 동일 알고리즘이 쓰인다.
 				retStr[4] = true if retStr[i]
 				retStr[i].chomp! if retStr[i]
 			end

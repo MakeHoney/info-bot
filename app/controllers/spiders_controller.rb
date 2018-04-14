@@ -1,6 +1,9 @@
 require 'crawler'
 
 class SpidersController < ApplicationController
+	# 버튼을 동적으로 구성하게끔 만들어주는 메소드
+	# flags배열의 요소(elem)들 리턴값을 기준으로 버튼을 생성하여
+	# dynamicButtons에 버튼을 추가한다.
 
 	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText = false)
 		cnt = 0; i = 0
@@ -74,16 +77,15 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("학생식당")
 			food = Crawler::SchoolFood.new()
-			dynamicText = "다른 식당은 운영하지 않습니다."
 			dynamicButtons = dynamic(
 				[food.dormFoodCourt[4],
 				food.facultyFoodCourt[2]],
 				["기숙사식당", "교직원식당"],
-				["처음으로"], dynamicText)
+				["처음으로"])
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: food.studentFoodCourt
 				},
 				keyboard: {
 					type: "buttons",
