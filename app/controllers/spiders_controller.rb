@@ -42,7 +42,7 @@ class SpidersController < ApplicationController
 			cnt = 0; i = 0
 
 			retValue.each do |elem|
-				if !elem
+				if elem
 					dynamicButtons.insert(cnt, tmpBuff[i])
 					dynamicText = "식당을 선택해주세요!"
 					cnt += 1
