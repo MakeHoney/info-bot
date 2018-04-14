@@ -36,9 +36,11 @@ class SpidersController < ApplicationController
 				food.dormFoodCourt[4],
 				food.facultyFoodCourt[2]
 			]
+
 			tmpBuff = ["학생식당", "기숙사식당", "교직원식당"]
 			dynamicButtons = ["처음으로"]
-			dynamicText = "오늘은 식당을 운영하지 않습니다."
+			# dynamicText = "오늘은 식당을 운영하지 않습니다."
+			dynamicText = "#{retValue[0]}, #{retValue[1]}, #{retValue[2]}"
 			cnt = 0; i = 0
 
 			retValue.each do |elem|
