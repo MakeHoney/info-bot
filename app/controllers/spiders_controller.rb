@@ -59,6 +59,8 @@ class SpidersController < ApplicationController
 					text: vacancy.printVacancy[0],
 					photo: {
 						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png",
+						width: 720,
+						height: 630
 					}
 				},
 				keyboard: {
@@ -76,6 +78,8 @@ class SpidersController < ApplicationController
 					text: vacancy.printVacancy[1],
 					photo: {
 						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png",
+						width: 720,
+						height: 630
 					}
 				},
 				keyboard: {
