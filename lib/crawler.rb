@@ -193,4 +193,19 @@ module Crawler
 			return retStr
 		end
 	end
+
+
+	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText)
+		cnt = 0; i = 0
+
+		flags.each do |elem|
+			if elem
+				dynamicButtons.insert(cnt, tmpBuff[i])
+				dynamicText.replace("식당을 선택해주세요!") unless dynamic.nil?
+				cnt += 1
+			end
+			i += 1
+		end
+		return dynamicButtons
+	end
 end
