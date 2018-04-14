@@ -47,7 +47,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["C1 열람실", "D1 열람실"]
+					buttons: ["C1 열람실", "D1 열람실", "처음으로"]
 				}
 			}
 			render json: @msg, status: :ok
@@ -61,6 +61,10 @@ class SpidersController < ApplicationController
 						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png",
 						width: 720,
 						height: 630
+					},
+					message_button: {
+						label: "상세확인",
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png"
 					}
 				},
 				keyboard: {
@@ -80,6 +84,10 @@ class SpidersController < ApplicationController
 						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png",
 						width: 720,
 						height: 630
+					},
+					message_button: {
+						label: "상세확인",
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png"
 					}
 				},
 				keyboard: {
