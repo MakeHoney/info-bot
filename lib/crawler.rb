@@ -65,7 +65,7 @@ module Crawler
 				@page.xpath("//table[@class='ajou_table'][2]
 					//td[contains(text(), \"#{set[i]}\")]").length
 				if length_for_exption == 0
-					retStr[i] = nil# "식단이 등록되지 않았어요!"
+					retStr[i] = false# "식단이 등록되지 않았어요!"
 					cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
@@ -78,8 +78,8 @@ module Crawler
 				end
 
 				cnt += 1	
-				retStr[4] = true unless retStr[i].nil?
-				retStr[i].chomp! unless retStr[i].nil?
+				retStr[4] = true if retStr[i]
+				retStr[i].chomp! if retStr[i]
 			end
 			return retStr
 		end
@@ -96,7 +96,7 @@ module Crawler
 					//td[contains(text(), \"#{set[i]}\")]").length
 				
 				if length_for_exption == 0
-					retStr[i] = nil # "식단이 등록되지 않았어요!"
+					retStr[i] = false # "식단이 등록되지 않았어요!"
 				else
 					@page.css('table.ajou_table')[2].
 					css('td.no_right')[cnt + 1].		
@@ -105,8 +105,8 @@ module Crawler
 					end	
 				end
 				cnt += 1
-				retStr[2] = true unless retStr[i].nil?
-				retStr[i].chomp! unless retStr[i].nil?
+				retStr[2] = true if retStr[i]
+				retStr[i].chomp! if retStr[i]
 			end
 			return retStr
 		end
