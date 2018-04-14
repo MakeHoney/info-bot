@@ -2,19 +2,7 @@ require 'crawler'
 
 class SpidersController < ApplicationController
 
-	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText)
-		cnt = 0; i = 0
 
-		flags.each do |elem|
-			if elem
-				dynamicButtons.insert(cnt, tmpBuff[i])
-				dynamicText.replace("식당을 선택해주세요!") unless dynamic.nil?
-				cnt += 1
-			end
-			i += 1
-		end
-		return dynamicButtons
-	end
 
 	def keyboard
 		@msg = {
@@ -228,5 +216,19 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 		end
+	end
+
+	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText)
+		cnt = 0; i = 0
+
+		flags.each do |elem|
+			if elem
+				dynamicButtons.insert(cnt, tmpBuff[i])
+				dynamicText.replace("식당을 선택해주세요!") unless dynamic.nil?
+				cnt += 1
+			end
+			i += 1
+		end
+		return dynamicButtons
 	end
 end
