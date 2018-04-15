@@ -58,13 +58,9 @@ class SpidersController < ApplicationController
 				message: {
 					text: vacancy.printVacancy[0],
 					photo: {
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png",
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}",
 						width: 720,
 						height: 630
-					},
-					message_button: {
-						label: "상세확인",
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png"
 					}
 				},
 				keyboard: {
@@ -81,13 +77,9 @@ class SpidersController < ApplicationController
 				message: {
 					text: vacancy.printVacancy[1],
 					photo: {
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png",
+						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}",
 						width: 720,
 						height: 630
-					},
-					message_button: {
-						label: "상세확인",
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png"
 					}
 				},
 				keyboard: {
