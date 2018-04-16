@@ -92,8 +92,9 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("C1 열람실 플러그 위치")
 			text = " * 플러그의 위치에 병아리가 있어요.\n
-					왼쪽 병아리부터 플러그와 가까운 자리 번호\n\n
-					349, 380, 405, 412, 444, 468, 473"
+					왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
+					(하단의 이미지는 실시간 이미지가 아닙니다.)\n
+					349, 380, 405 or 412, 444, 468, 473"
 			@msg = {
 				message: {
 					text: text,

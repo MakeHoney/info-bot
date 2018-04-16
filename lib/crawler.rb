@@ -27,11 +27,11 @@ module Crawler
 			if (string.include?("<") || string.include?(">") || 
 				(string.include?("운영") && string.include?("시간")) || 
 				string.include?("Burger")) # && !string.include?("택") 을 넣을까..?
-			return true
-		else
-			return false
+				return true
+			else
+				return false
+			end
 		end
-	end
 
 		def studentFoodCourt
 			retStr = ''
