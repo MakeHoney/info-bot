@@ -65,7 +65,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["D1 열람실", "처음으로"]
+					buttons: ["D1 열람실", "C1 열람실 플러그 위치", "처음으로"]
 				}
 			}
 
@@ -85,6 +85,27 @@ class SpidersController < ApplicationController
 				keyboard: {
 					type: "buttons",
 					buttons: ["C1 열람실", "처음으로"]
+				}
+			}
+
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("C1 열람실 플러그 위치")
+			text = " * 플러그의 위치에 병아리가 있어요.\n
+					왼쪽 병아리부터 플러그와 가까운 자리 번호\n\n
+					349, 380, 405, 412, 444, 468, 473"
+			@msg = {
+				message: {
+					text: text,
+					photo: {
+						url: "https://postfiles.pstatic.net/MjAxODA0MTZfNDIg/MDAxNTIzODMwODc5Mjg5.oSjyfCT19ZS4XSE5_AqJGqH9piblcEpPX79vqHJFaVQg.gQi6gQmAX8FgvGh9FHFkY8I7ke2l8V3CrpYZRH0RPm0g.PNG.pourmonreve3/image_3411826531523830501839.png?type=w773",
+						width: 720,
+						height: 200
+					}
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: ["D1 열람실", "처음으로"]
 				}
 			}
 
