@@ -102,12 +102,15 @@ module Crawler
 				if length_for_exption == 0
 					retStr[i] = false # "식단이 등록되지 않았어요!"
 				else
+					retStr[i] += "※ <중식>\n" if i == 0
+					retStr[i] += "※ <석식>\n" unless i == 0
 					@page.css('table.ajou_table')[2].
 					css('td.no_right')[cnt + 1].		
 					css('li').each do |li|
 						retStr[i] += "#{li.text}\n"
 					end	
-					retStr[i] += "\n＊운영시간\n점심 : 11:00 ~ 14:00\n저녁 : 17:00 ~ 19:00\n"
+					retStr[i] += "\n＊운영시간 : 11:00 ~ 14:00\n" if i == 0
+					retStr[i] += "\n＊운영시간 : 17:00 ~ 19:00\n" unless i == 0
 				end
 				cnt += 1
 				retStr[2] = true if retStr[i]
