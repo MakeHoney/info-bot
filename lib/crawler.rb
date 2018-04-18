@@ -107,6 +107,7 @@ module Crawler
 					css('li').each do |li|
 						retStr[i] += "#{li.text}\n"
 					end	
+					retStr[i] += "\n＊운영시간\n점심 : 11:00 ~ 14:00\n저녁 : 17:00 ~ 19:00\n"
 				end
 				cnt += 1
 				retStr[2] = true if retStr[i]
