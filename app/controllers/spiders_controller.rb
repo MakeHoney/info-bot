@@ -1,4 +1,5 @@
 require 'crawler'
+require 'uri'
 
 class SpidersController < ApplicationController
 	# 버튼을 동적으로 구성하게끔 만들어주는 메소드
@@ -54,11 +55,13 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("C1 열람실")
 			vacancy = Crawler::Vacancy.new()
+			url = "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}"
+
 			@msg = {
 				message: {
 					text: vacancy.printVacancy[0],
 					photo: {
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}",
+						url: URI.encode(url),
 						width: 720,
 						height: 630
 					}
@@ -73,11 +76,13 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("D1 열람실")
 			vacancy = Crawler::Vacancy.new()
+			url = "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}"
+
 			@msg = {
 				message: {
 					text: vacancy.printVacancy[1],
 					photo: {
-						url: "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}",
+						url: URI.encode(url),
 						width: 720,
 						height: 630
 					}
@@ -291,3 +296,5 @@ class SpidersController < ApplicationController
 		end
 	end
 end
+
+
