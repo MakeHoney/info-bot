@@ -64,6 +64,10 @@ class SpidersController < ApplicationController
 						url: URI.encode(url),
 						width: 720,
 						height: 630
+					},
+					message_button: {
+						label: "상세정보",
+						url: URI.encode(url)
 					}
 				},
 				keyboard: {
@@ -85,6 +89,10 @@ class SpidersController < ApplicationController
 						url: URI.encode(url),
 						width: 720,
 						height: 630
+					},
+					message_button: {
+						label: "상세정보",
+						url: URI.encode(url)
 					}
 				},
 				keyboard: {
