@@ -1,37 +1,34 @@
 require 'open-uri'
 require 'nokogiri'
 
-	# f = File.open('test.txt', 'w')
-	# f.puts @html #	파일 입출력을 이용하여 문서 디버깅
 module Crawler
 	class SchoolFood
-		# @page
 		def initialize
 			url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
-			html = fixHtml(open(url).read)
+
 			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
+			html = fixHtml(open(url).read)
+
 			@page = Nokogiri::HTML(html)
 		end
 
 		def fixHtml(html)
-			html.gsub!(/<[가-힣]/) {|s| s = '※ &lt;' + s[1]}
+			html.gsub!(/<[가-힣]/) {|s| s = '&lt;' + s[1]}
 			html.gsub!(/[가-힣]>/) {|s| s = s[0] + '&gt;'}
 			return html
-			# 명시적으로 html을 반환해주지 않을 경우, html문서에
-			# 위 정규표현식에 부합하는 lexeme이 하나도 없는 경우
-			# 아무것도 반환하지 않는다. 그래서 html문서가 빈 채로
-			# 반환되는 문제점이 발생한다.
+
 		end
-		
+
 		def partition(string)
-			if (string.include?("<") || string.include?(">") || 
-				(string.include?("운영") && string.include?("시간")) || 
+			if (string.include?("<") || string.include?(">") ||
+				(string.include?("운영") && string.include?("시간")) ||
 				string.include?("Burger")) # && !string.include?("택") 을 넣을까..?
 				return true
 			else
 				return false
 			end
 		end
+
 
 		def studentFoodCourt
 			retStr = ''
@@ -44,6 +41,7 @@ module Crawler
 			end
 
 			retStr.chomp!
+
 			if retStr.empty?
 				return false
 				# return "식단이 등록되지 않았어요!"
@@ -53,7 +51,16 @@ module Crawler
 		end
 
 		def dormFoodCourt
-			retStr = ['', '', '', '', false]
+			retHash = {
+				breakfast: '',
+				lunch: '',
+				dinner: '',
+				snack: '',
+				isOpen: false
+			}
+
+			keys = retHash.keys
+
 			set = ['아침', '점심', '저녁', '분식']
 			cnt = 0
 
@@ -61,62 +68,77 @@ module Crawler
 				flag = 0
 				# 식단이 등록되어 있지 않은 경우 예외처리 => 변수 cnt와 xpath 이용
 				# xpath는 index가 1부터 시작한다.
-				length_for_exption = 
+				length_for_exption =
 				@page.xpath("//table[@class='ajou_table'][2]
 					//td[contains(text(), \"#{set[i]}\")]").length
+
 				if length_for_exption == 0
-					retStr[i] = false# "식단이 등록되지 않았어요!"
+					# retStr[i] = "식단이 등록되지 않았어요!"
+					retHash[keys[i]] = false
 					cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
 					css('td.no_right')[cnt + 1].		# 아침 점심 저녁 선택자
 					css('li').each do |li|
-						retStr[i] += "\n" if partition(li.text) && flag != 0
-						retStr[i] += "#{li.text}\n"
+						retHash[keys[i]] += "\n" if partition(li.text) && flag != 0
+						retHash[keys[i]] += "#{li.text}\n"
 						flag += 1
 					end
+
 				end
 
-				cnt += 1	
+				cnt += 1
+
 				# 아침, 점심, 저녁, 분식 중 하나라도 식단이 존재하면
-				# retStr[4]의 값을 true로 변경한다. 다시말해서, 
+				# retStr[4]의 값을 true로 변경한다. 다시말해서,
 				# 모든 시간대의 식단이 없으면 retStr[4]의 값은 false이다.
 				# facultyFoodCourt() 메소드에서도 동일 알고리즘이 쓰인다.
-				retStr[4] = true if retStr[i]
-				retStr[i].chomp! if retStr[i]
+				retHash[:isOpen] = true if retHash[keys[i]]
+				retHash[keys[i]].chomp! if retHash[keys[i]]
+
 			end
-			return retStr
+			return retHash
 		end
 
-		def facultyFoodCourt		
-			retStr = ['', '', false]
+		def facultyFoodCourt
+			retHash = {
+				lunch: '',
+				dinner: '',
+				isOpen: false
+			}
+
+			keys = retHash.keys
+
 			set = ['점심', '저녁']
 			cnt = 0
 
 			2.times do |i|
 
-				length_for_exption = 
+				length_for_exption =
 				@page.xpath("//table[@class='ajou_table'][3]
 					//td[contains(text(), \"#{set[i]}\")]").length
-				
+
 				if length_for_exption == 0
-					retStr[i] = false # "식단이 등록되지 않았어요!"
+					retHash[keys[i]] = false
 				else
-					retStr[i] += "※ <중식 - 5,000원>\n" if i == 0
-					retStr[i] += "※ <석식 - 5,000원>\n" unless i == 0
+					retHash[keys[i]] += "※ <중식 - 5,000원>\n" if i == 0
+					retHash[keys[i]] += "※ <석식 - 5,000원>\n" unless i == 0
 					@page.css('table.ajou_table')[2].
-					css('td.no_right')[cnt + 1].		
+					css('td.no_right')[cnt + 1].
 					css('li').each do |li|
-						retStr[i] += "#{li.text}\n"
-					end	
-					retStr[i] += "\n*운영시간 : 11:00 ~ 14:00\n" if i == 0
-					retStr[i] += "\n*운영시간 : 17:00 ~ 19:00\n" unless i == 0
+						retHash[keys[i]] += "#{li.text}\n"
+					end
+					retHash[keys[i]] += "\n*운영시간 : 11:00 ~ 14:00\n" if i == 0
+					retHash[keys[i]] += "\n*운영시간 : 17:00 ~ 19:00\n" unless i == 0
 				end
+
 				cnt += 1
-				retStr[2] = true if retStr[i]
-				retStr[i].chomp! if retStr[i]
+				retHash[:isOpen] = true if retHash[keys[i]]
+				retHash[keys[i]].chomp! if retHash[keys[i]]
+
 			end
-			return retStr
+
+			return retHash
 		end
 	end
 
@@ -166,7 +188,7 @@ module Crawler
 		end
 
 		def printNotice(userNumOfNotice)
-			# userNumOfNotice : 유저 개개인이 printNotice 재실행 전까지 본 공지글의 수 
+			# userNumOfNotice : 유저 개개인이 printNotice 재실행 전까지 본 공지글의 수
 			newNotice = @totalNum - userNumOfNotice
 			puts "총 #{newNotice}개의 새로운 공지가 있습니다."
 			puts "총 게시물의 수 : #{@totalNum}"
@@ -188,7 +210,6 @@ module Crawler
 				@pages << Nokogiri::HTML(html)
 			end
 		end
-
 		def printVacancy
 			retStr = ['', '']
 			2.times do |i|	# C1, D1
