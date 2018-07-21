@@ -23,7 +23,7 @@ class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식"]
+			buttons: ["도서관 여석 확인", "오늘의 학식", "학교주변 버스정보(테스트)"]
 		}
 		render json: @msg, status: :ok
 	end
@@ -45,7 +45,7 @@ class SpidersController < ApplicationController
 
 
 		# 기능 분기문 시작
-
+		# 도서관 기능 #
 		if @res.eql?("도서관 여석 확인")
 			@msg = {
 				message: {
@@ -130,6 +130,8 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
+
+		# 학식 기능 #
 		elsif @res.eql?("오늘의 학식")
 			food = Crawler::SchoolFood.new()
 			dynamicText = "오늘은 식당을 운영하지 않습니다."
@@ -295,6 +297,67 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
+	# 교통 정보 기능 #
+	elsif @res.eql?("학교주변 버스정보(테스트)")
+			url = "https://user-images.githubusercontent.com/31656287/43036069-3855d32e-8d35-11e8-9d6d-cb5bdbf6db10.jpg"
+			buttons = ["1. 아주대 정문(맥날 앞)", "처음으로"]
+
+			@msg = {
+				message: {
+					text: "정류장을 선택해 주세요!",
+					photo: {
+						url: url,
+						width: 350,
+						height: 720
+					}
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("1. 아주대 정문(맥날 앞)")
+			transport = Crawler::Transport.new();
+			buttons = ["처음으로"];
+
+			transport.busesInfo(:entrance_1).each do |key, value|
+				buttons.unshift("#{key}번[1]")
+			end
+
+			@msg = {
+				message: {
+					text: "버스를 선택해 주세요!"
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+			render json: @msg, status: :ok
+
+			# 논리 연산자 사용하여서 해결?
+		elsif @res.eql?("3007번[1]")
+			transport = Crawler::Transport.new();
+			buttons = ["처음으로"];
+
+			text = "남은 시간: #{transport.busesInfo(:entrance_1)['3007'][:leftTime]}분\n
+							남은 좌석: #{transport.busesInfo(:entrance_1)['3007'][:seats]석}"
+
+			@msg = {
+				message: {
+					text: text
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+			render json: @msg, status: :ok
+
+
 		elsif @res.eql?("처음으로")
 			@msg = {
 				message: {
@@ -302,7 +365,7 @@ class SpidersController < ApplicationController
 					},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식"]
+					buttons: ["도서관 여석 확인", "오늘의 학식", "학교주변 버스정보(테스트)"]
 				}
 			}
 			render json: @msg, status: :ok
