@@ -321,7 +321,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("1. 아주대 정문 (맥날)")
 			transport = Crawler::Transport.new()
-			buttons = ["처음으로"]
+			buttons = ["교통정보(테스트)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]")
@@ -358,7 +358,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("2. 아주대 정문 (KFC)")
 			transport = Crawler::Transport.new()
-			buttons = ["처음으로"]
+			buttons = ["교통정보(테스트)", "처음으로"]
 
 			transport.busesInfo(:entrance_2).each do |key, value|
 				buttons.unshift("#{key}번[2]")
