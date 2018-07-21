@@ -230,62 +230,72 @@ module Crawler
 		@@stations = {
 			entrance_1:  {
 				id: '203000066',
-				busNum: {
-					'200000070' => '11-1',
-					'200000185' => '13-4',
-					'200000211' => '18',
-					'200000053' => '20',
-					'223000100' => '202',
-					'200000064' => '32',
-					'200000236' => '32-3',
-					'200000272' => '32-4',
-					'200000231' => '54',
-					'234000024' => '720-1',
-					'234000026' => '720-2',
-					'200000146' => '80',
-					'200000208' => '81',
-					'200000197' => '85',
-					'200000199' => '88-1',
-					'200000201' => '9-2',
-					'200000144' => '99',
-					'200000196' => '99-2',
-					'234000013' => '1007-1',
-					'200000110' => '3007',
-					'200000274' => '3008',
-					'204000056' => '4000',
-					'200000112' => '7000',
-					'200000119' => '7001',
-					'200000205' => '8800'
-				}
+			},
+			entrance_2: {
+				id: '202000005'
+			},
+			busNum: {
+				'200000070' => '11-1',
+				'200000185' => '13-4',
+				'200000211' => '18',
+				'200000053' => '20',
+				'223000100' => '202',
+				'200000064' => '32',
+				'200000236' => '32-3',
+				'200000272' => '32-4',
+				'200000231' => '54',
+				'234000024' => '720-1',
+				'234001608' => '720-1A'
+				'234000026' => '720-2',
+				'200000146' => '80',
+				'200000208' => '81',
+				'200000197' => '85',
+				'200000199' => '88-1',
+				'200000201' => '9-2',
+				'200000144' => '99',
+				'200000196' => '99-2',
+				'234000013' => '1007-1',
+				'200000110' => '3007',
+				'200000274' => '3008',
+				'204000056' => '4000',
+				'200000112' => '7000',
+				'200000119' => '7001',
+				'200000205' => '8800'
 			}
 		}
 
 		def initialize
-			@pages = [];
+			@pages = {
+				entrance_1: '',
+				entrance_2: ''
+			}
 
-			@@stations.each_with_index do |station, i|
-				# 인덱스 1부터 시작
-				# puts station[i + 1][:id]
-				url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{station[i + 1][:id]}"
-				html = open(url).read
-				@pages << Nokogiri::XML(html)
+			@@stations.each do |station, value|
+				# puts station
+				if station != :busNum
+					url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
+					html = open(url).read
+					@pages[station] = Nokogiri::XML(html)
+				end
 			end
+			# pp @pages
 		end
 
 		def busesInfo(spotSymbol)
 			buses = {}
-
 			busInformations = {
 				leftTime: [],	# 남은 시간
 				seats: []			# 남은 좌석
 			}
 
-			@pages[0].css('busArrivalList').each do |busDesc|
-				tmpKey = @@stations[spotSymbol][:busNum][busDesc.css('routeId').text]
+			# puts @pages[spotSymbol].css('resultMessage').text
+			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
+				tmpKey = @@stations[:busNum][busDesc.css('routeId').text]
 				buses[tmpKey] = Hash.new(busInformations)
 				buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
 				buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
 			end
+
 			# pp buses
 			return buses
 		end

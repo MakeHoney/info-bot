@@ -300,7 +300,7 @@ class SpidersController < ApplicationController
 	# 교통 정보 기능 #
 	elsif @res.eql?("학교주변 버스정보(테스트)")
 			url = "https://user-images.githubusercontent.com/31656287/43036069-3855d32e-8d35-11e8-9d6d-cb5bdbf6db10.jpg"
-			buttons = ["1. 아주대 정문(맥날 앞)", "처음으로"]
+			buttons = ["1. 아주대 정문 (맥날 앞)", "처음으로"]
 
 			@msg = {
 				message: {
@@ -319,7 +319,7 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("1. 아주대 정문(맥날 앞)")
+		elsif @res.eql?("1. 아주대 정문 (맥날 앞)")
 			transport = Crawler::Transport.new();
 			buttons = ["처음으로"];
 
@@ -338,13 +338,12 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-			# 논리 연산자 사용하여서 해결?
-		elsif @res.eql?("3007번[1]")
+		elsif @res.include?("[1]")
+			res = @res.slice "번[1]"
 			transport = Crawler::Transport.new();
-			buttons = ["처음으로"];
+			buttons = [@res, "1. 아주대 정문 (맥날 앞)", "처음으로"];
 
-			text = "남은 시간: #{transport.busesInfo(:entrance_1)['3007'][:leftTime]}분\n
-							남은 좌석: #{transport.busesInfo(:entrance_1)['3007'][:seats]석}"
+			text = "남은 시간: #{transport.busesInfo(:entrance_1)[res][:leftTime]}분\n남은 좌석: #{transport.busesInfo(:entrance_1)[res][:seats]}석"
 
 			@msg = {
 				message: {
