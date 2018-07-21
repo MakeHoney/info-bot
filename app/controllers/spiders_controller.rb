@@ -327,9 +327,11 @@ class SpidersController < ApplicationController
 				buttons.unshift("#{key}번[1]")
 			end
 
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
+
 			@msg = {
 				message: {
-					text: "버스를 선택해 주세요!"
+					text: text
 				},
 				keyboard: {
 					type: "buttons",
@@ -363,16 +365,18 @@ class SpidersController < ApplicationController
 			transport.busesInfo(:entrance_2).each do |key, value|
 				buttons.unshift("#{key}번[2]")
 			end
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 
 			@msg = {
 				message: {
-					text: "버스를 선택해 주세요!"
+					text: text
 				},
 				keyboard: {
 					type: "buttons",
 					buttons: buttons
 				}
 			}
+			
 			render json: @msg, status: :ok
 
 		elsif @res.include?("[2]")
