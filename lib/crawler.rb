@@ -231,6 +231,9 @@ module Crawler
 			entrance_2: {
 				id: '202000005'
 			},
+			entrance_5: {
+				id: '202000042'
+			},
 			busNum: {
 				'200000070' => '11-1',
 				'200000185' => '13-4',
@@ -270,7 +273,8 @@ module Crawler
 		def initialize
 			@pages = {
 				entrance_1: '',
-				entrance_2: ''
+				entrance_2: '',
+				entrance_5: ''
 			}
 
 			@@stations.each do |station, value|
