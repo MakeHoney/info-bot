@@ -23,7 +23,7 @@ class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(테스트)"]
+			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(베타)"]
 		}
 		render json: @msg, status: :ok
 	end
@@ -298,7 +298,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		# 교통 정보 기능 #
-		elsif @res.eql?("교통 정보(테스트)")
+	elsif @res.eql?("교통 정보(베타)")
 			url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
 			buttons = ["* 길찾기", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
 
@@ -321,7 +321,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("1. 아주대 정문 (맥날)")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(테스트)", "처음으로"]
+			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]")
@@ -345,7 +345,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번[1]" # 버스 번호
 			transport = Crawler::Transport.new()
-			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
+			buttons = [res, "교통 정보(베타)", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(:entrance_1)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[@res][:leftTime]}분\n"
@@ -368,7 +368,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("2. 아주대 정문 (KFC)")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(테스트)", "처음으로"]
+			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_2).each do |key, value|
 				buttons.unshift("#{key}번[2]")
@@ -392,7 +392,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번[2]"
 			transport = Crawler::Transport.new()
-			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
+			buttons = [res, "교통 정보(베타)", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(:entrance_2)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[@res][:leftTime]}분\n"
@@ -415,7 +415,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("5. 아주대 후문")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(테스트)", "처음으로"]
+			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_5).each do |key, value|
 				buttons.unshift("#{key}번[5]")
@@ -439,7 +439,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번[5]"
 			transport = Crawler::Transport.new()
-			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
+			buttons = [res, "교통 정보(베타)", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(:entrance_5)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_5)[@res][:leftTime]}분\n"
@@ -462,7 +462,7 @@ class SpidersController < ApplicationController
 
 
 		elsif @res.eql?("* 길찾기")
-			buttons = ["강남역", "사당역", "교통 정보(테스트)", "처음으로"]
+			buttons = ["강남역", "사당역", "교통 정보(베타)", "처음으로"]
 
 			@msg = {
 				message: {
@@ -477,7 +477,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("강남역")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(테스트)", "처음으로"]
+			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]") if key.eql?('광역3007') || key.eql?('광역3008')
@@ -500,7 +500,7 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("사당역")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(테스트)", "처음으로"]
+			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]") if key.eql?('광역7000')
@@ -532,7 +532,7 @@ class SpidersController < ApplicationController
 					},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(테스트)"]
+					buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(베타)"]
 				}
 			}
 			render json: @msg, status: :ok
