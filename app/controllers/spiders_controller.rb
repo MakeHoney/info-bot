@@ -300,7 +300,7 @@ class SpidersController < ApplicationController
 		# 교통 정보 기능 #
 		elsif @res.eql?("교통 정보(테스트)")
 			url = "https://user-images.githubusercontent.com/31656287/43036069-3855d32e-8d35-11e8-9d6d-cb5bdbf6db10.jpg"
-			buttons = ["길찾기", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
+			buttons = ["* 길찾기", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
 
 			@msg = {
 				message: {
@@ -461,7 +461,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 
-		elsif @res.eql?("길찾기")
+		elsif @res.eql?("* 길찾기")
 			buttons = ["강남역", "사당역", "교통 정보(테스트)", "처음으로"]
 
 			@msg = {
