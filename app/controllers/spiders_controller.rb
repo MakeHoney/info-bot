@@ -346,12 +346,14 @@ class SpidersController < ApplicationController
 			transport = Crawler::Transport.new()
 			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
 
+			busNumText = "#{transport.busesInfo(:entrance_1)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[@res][:leftTime]}분\n"
-			transport.busesInfo(:entrance_1)[@res][:seats].eql? "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[@res][:seats]}석\n"
-			transport.busesInfo(:entrance_1)[@res][:isLowPlate] ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+			transport.busesInfo(:entrance_1)[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[@res][:seats]}석\n"
+			transport.busesInfo(:entrance_1)[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
 			vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_1)[@res][:vehicleNum]}"
 
-			text  = leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			text = busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+
 			@msg = {
 				message: {
 					text: text
@@ -390,12 +392,13 @@ class SpidersController < ApplicationController
 			transport = Crawler::Transport.new()
 			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
 
+			busNumText = "#{transport.busesInfo(:entrance_2)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[@res][:leftTime]}분\n"
-			transport.busesInfo(:entrance_2)[@res][:seats].eql? "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[@res][:seats]}석\n"
-			transport.busesInfo(:entrance_2)[@res][:isLowPlate] ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+			transport.busesInfo(:entrance_2)[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[@res][:seats]}석\n"
+			transport.busesInfo(:entrance_2)[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
 			vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_2)[@res][:vehicleNum]}"
 
-			text  = leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			text = busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 
 			@msg = {
 				message: {

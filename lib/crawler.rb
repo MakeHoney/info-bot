@@ -295,7 +295,7 @@ module Crawler
 				buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
 				buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
 				buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
-				buses[tmpKey][:isLowPlate] = true if busDesc.css('lowPlate1').text.eql?('1')
+				buses[tmpKey][:isLowPlate] = busDesc.css('lowPlate1').text
 				buses[tmpKey][:vehicleNum] = busDesc.css('plateNo1').text
 			end
 
