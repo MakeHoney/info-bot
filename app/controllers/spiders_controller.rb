@@ -341,11 +341,12 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.include?("[1]")
-			res = @res.slice "번[1]"
+			res = @res.dup
+			@res.slice! "번[1]"
 			transport = Crawler::Transport.new()
-			buttons = [@res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
+			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
 
-			text = "남은 시간: #{transport.busesInfo(:entrance_1)[res][:leftTime]}분\n남은 좌석: #{transport.busesInfo(:entrance_1)[res][:seats]}석"
+			text = "남은 시간: #{transport.busesInfo(:entrance_1)[@res][:leftTime]}분\n남은 좌석: #{transport.busesInfo(:entrance_1)[@res][:seats]}석"
 
 			@msg = {
 				message: {
@@ -376,15 +377,16 @@ class SpidersController < ApplicationController
 					buttons: buttons
 				}
 			}
-			
+
 			render json: @msg, status: :ok
 
 		elsif @res.include?("[2]")
-			res = @res.slice "번[2]"
+			res = @res.dup
+			@res.slice! "번[2]"
 			transport = Crawler::Transport.new()
-			buttons = [@res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
+			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
 
-			text = "남은 시간: #{transport.busesInfo(:entrance_2)[res][:leftTime]}분\n남은 좌석: #{transport.busesInfo(:entrance_2)[res][:seats]}석"
+			text = "남은 시간: #{transport.busesInfo(:entrance_2)[@res][:leftTime]}분\n남은 좌석: #{transport.busesInfo(:entrance_2)[@res][:seats]}석"
 
 			@msg = {
 				message: {

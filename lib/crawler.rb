@@ -19,7 +19,6 @@ module Crawler
 			html.gsub!(/<[가-힣]/) {|s| s = '&lt;' + s[1]}
 			html.gsub!(/[가-힣]>/) {|s| s = s[0] + '&gt;'}
 			return html
-
 		end
 
 		def partition(string)
@@ -47,7 +46,6 @@ module Crawler
 
 			if retStr.empty?
 				return false
-				# return "식단이 등록되지 않았어요!"
 			else
 				return retStr
 			end
@@ -76,8 +74,7 @@ module Crawler
 					//td[contains(text(), \"#{set[i]}\")]").length
 
 				if length_for_exption == 0
-					# retStr[i] = "식단이 등록되지 않았어요!"
-					retHash[keys[i]] = "식단이 등록되지 않았어요!"
+					retHash[keys[i]] = false
 					cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
@@ -122,7 +119,7 @@ module Crawler
 					//td[contains(text(), \"#{set[i]}\")]").length
 
 				if length_for_exption == 0
-					retHash[keys[i]] = "식단이 등록되지 않았어요!"
+					retHash[keys[i]] = false
 				else
 					retHash[keys[i]] += "※ <중식 - 5,000원>\n" if i == 0
 					retHash[keys[i]] += "※ <석식 - 5,000원>\n" unless i == 0
