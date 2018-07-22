@@ -328,7 +328,8 @@ class SpidersController < ApplicationController
 			end
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
-
+			buttons.sort!
+			
 			@msg = {
 				message: {
 					text: text
@@ -373,6 +374,7 @@ class SpidersController < ApplicationController
 				buttons.unshift("#{key}번[2]")
 			end
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
+			buttons.sort!
 
 			@msg = {
 				message: {
