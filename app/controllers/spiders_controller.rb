@@ -299,7 +299,7 @@ class SpidersController < ApplicationController
 
 		# 교통 정보 기능 #
 		elsif @res.eql?("교통 정보(테스트)")
-			url = "https://user-images.githubusercontent.com/31656287/43036069-3855d32e-8d35-11e8-9d6d-cb5bdbf6db10.jpg"
+			url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
 			buttons = ["* 길찾기", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
 
 			@msg = {
