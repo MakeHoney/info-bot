@@ -392,7 +392,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번[2]"
 			transport = Crawler::Transport.new()
-			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
+			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(:entrance_2)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[@res][:leftTime]}분\n"
@@ -439,7 +439,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번[5]"
 			transport = Crawler::Transport.new()
-			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "처음으로"]
+			buttons = [res, "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "5. 아주대 후문", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(:entrance_5)[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_5)[@res][:leftTime]}분\n"
@@ -466,7 +466,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: "선택 지역으로 가는 버스가 버스번호[정류장번호] 형식으로 제공됩니다."
+					text: "선택 지역으로 가는 버스 중 대기시간이 존재하는 버스가 버스번호[정류장번호] 형식으로 제공됩니다."
 				},
 				keyboard: {
 					type: "buttons",
@@ -480,7 +480,7 @@ class SpidersController < ApplicationController
 			buttons = ["교통 정보(테스트)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('3007') || key.eql?('3008')
+				buttons.unshift("#{key}번[1]") if key.eql?('광역3007') || key.eql?('광역3008')
 			end
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
@@ -503,11 +503,11 @@ class SpidersController < ApplicationController
 			buttons = ["교통 정보(테스트)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('7000')
+				buttons.unshift("#{key}번[1]") if key.eql?('광역7000')
 			end
 
 			transport.busesInfo(:entrance_5).each do |key, value|
-				buttons.unshift("#{key}번[5]") if key.eql?('7002')
+				buttons.unshift("#{key}번[5]") if key.eql?('광역7002')
 			end
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
