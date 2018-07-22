@@ -281,16 +281,22 @@ module Crawler
 		def busesInfo(spotSymbol)
 			buses = {}
 			busInformations = {
-				leftTime: [],	# 남은 시간
-				seats: []			# 남은 좌석
+				number: '', 				# 버스 번호
+				leftTime: '',				# 남은 시간
+				seats: '',					# 남은 좌석
+				isLowPlate: false,	# 저상 여부
+				vehicleNum: ''			# 차량 번호
 			}
 
 			# puts @pages[spotSymbol].css('resultMessage').text
 			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
 				tmpKey = @@stations[:busNum][busDesc.css('routeId').text]
 				buses[tmpKey] = Hash.new(busInformations)
+				buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
 				buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
 				buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
+				buses[tmpKey][:isLowPlate] = true if busDesc.css('lowPlate1').text.eql?('1')
+				buses[tmpKey][:vehicleNum] = busDesc.css('plateNo1').text
 			end
 
 			# pp buses
