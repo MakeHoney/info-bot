@@ -7,7 +7,7 @@ class SpidersController < ApplicationController
 			buttonName: "1. 아주대 정문 (맥날)",
 			buttonIdx: "[1]",
 			buttonSymbol: :entrance_1
-		} ,
+		},
 		stop_2: {
 			buttonName: "2. 아주대 정문 (KFC)",
 			buttonIdx: "[2]",
@@ -352,9 +352,9 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-		elsif @res.eql?(@@dataSetForTransport[:stop_1][:buttonName] || @@dataSetForTransport[:stop_2][:buttonName] ||
-										@@dataSetForTransport[:stop_3][:buttonName] || @@dataSetForTransport[:stop_4][:buttonName] ||
-										@@dataSetForTransport[:stop_5][:buttonName] || @@dataSetForTransport[:stop_6][:buttonName])
+		elsif @res.eql? @@dataSetForTransport[:stop_1][:buttonName] || @res.eql? @@dataSetForTransport[:stop_2][:buttonName] ||
+					@res.eql? @@dataSetForTransport[:stop_3][:buttonName] || @res.eql? @@dataSetForTransport[:stop_4][:buttonName] ||
+					@res.eql? @@dataSetForTransport[:stop_5][:buttonName] || @res.eql? @@dataSetForTransport[:stop_6][:buttonName])
 			dataSet = nil
 			@@dataSetForTransport.each do |key, value|
 				if value[:buttonName].eql?(@res)
@@ -384,9 +384,9 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.include?(@@dataSetForTransport[:stop_1][:buttonIdx] || @@dataSetForTransport[:stop_2][:buttonIdx] ||
-												@@dataSetForTransport[:stop_3][:buttonIdx] || @@dataSetForTransport[:stop_4][:buttonIdx] ||
-												@@dataSetForTransport[:stop_5][:buttonIdx] || @@dataSetForTransport[:stop_6][:buttonIdx])
+		elsif @res.include? @@dataSetForTransport[:stop_1][:buttonIdx] || @res.include? @@dataSetForTransport[:stop_2][:buttonIdx] ||
+					@res.include? @@dataSetForTransport[:stop_3][:buttonIdx] || @res.include? @@dataSetForTransport[:stop_4][:buttonIdx] ||
+					@res.include? @@dataSetForTransport[:stop_5][:buttonIdx] || @res.include? @@dataSetForTransport[:stop_6][:buttonIdx]
 			dataSet = nil
 			@@dataSetForTransport.each do |key, value|
 				if @res.include?(value[:buttonIdx])
