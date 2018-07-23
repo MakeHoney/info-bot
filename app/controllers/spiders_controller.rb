@@ -2,6 +2,39 @@ require 'crawler'
 require 'uri'
 
 class SpidersController < ApplicationController
+	@@dataSetForTransport = {
+		stop_1: {
+			buttonName: "1. 아주대 정문 (맥날)",
+			buttonIdx: "[1]",
+			buttonSymbol: :entrance_1
+		} ,
+		stop_2: {
+			buttonName: "2. 아주대 정문 (KFC)",
+			buttonIdx: "[2]",
+			buttonSymbol: :entrance_2
+		},
+		stop_3: {
+			buttonName: "3. 창현고, 유신고"
+			buttonIdx: "[3]",
+			buttonSymbol: :highschool_1
+		},
+		stop_4: {
+			buttonName: "4. 창현고, 유신고",
+			buttonIdx: "[4]",
+			buttonSymbol: :highschool_2
+		},
+		stop_5: {
+			buttonName: "5. 아주대 후문",
+			buttonIdx: "[5]",
+			buttonSymbol: :entrance_3
+		},
+		stop_6: {
+			buttonNmae: "6. 아주대 후문",
+			buttonIdx: "[6]",
+			buttonSymbol: :entrance_4
+		}
+	}
+
 	# 버튼을 동적으로 구성하게끔 만들어주는 메소드
 	# flags배열의 요소(elem)들 리턴값을 기준으로 버튼을 생성하여
 	# dynamicButtons에 버튼을 추가한다.
