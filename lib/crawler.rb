@@ -301,7 +301,7 @@ module Crawler
 			# puts @pages[spotSymbol].css('resultMessage').text
 			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
 				tmpKey = @@stations[:busNum][busDesc.css('routeId').text]
-				buses[tmpKey] = Hash.new(busInformations)
+				buses[tmpKey] = busInformations.dup
 				buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
 				buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
 				buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text

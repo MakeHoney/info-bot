@@ -29,7 +29,7 @@ class SpidersController < ApplicationController
 			buttonSymbol: :entrance_3
 		},
 		stop_6: {
-			buttonNmae: "6. 아주대 후문",
+			buttonName: "6. 아주대 후문",
 			buttonIdx: "[6]",
 			buttonSymbol: :entrance_4
 		}
