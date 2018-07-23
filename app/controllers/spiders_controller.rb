@@ -417,7 +417,7 @@ class SpidersController < ApplicationController
 			transport = Crawler::Transport.new()
 			buttons = ["교통 정보(베타)", "처음으로"]
 
-			transport.busesInfo(:entrance_5).each do |key, value|
+			transport.busesInfo(:entrance_3).each do |key, value|
 				buttons.unshift("#{key}번[5]")
 			end
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
@@ -441,11 +441,11 @@ class SpidersController < ApplicationController
 			transport = Crawler::Transport.new()
 			buttons = [res, "교통 정보(베타)", "처음으로"]
 
-			busNumText = "#{transport.busesInfo(:entrance_5)[@res][:number]}\n"
-			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_5)[@res][:leftTime]}분\n"
-			transport.busesInfo(:entrance_5)[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_5)[@res][:seats]}석\n"
-			transport.busesInfo(:entrance_5)[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-			vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_5)[@res][:vehicleNum]}"
+			busNumText = "#{transport.busesInfo(:entrance_3)[@res][:number]}\n"
+			leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_3)[@res][:leftTime]}분\n"
+			transport.busesInfo(:entrance_3)[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_3)[@res][:seats]}석\n"
+			transport.busesInfo(:entrance_3)[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+			vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_3)[@res][:vehicleNum]}"
 
 			text = busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 
@@ -480,7 +480,7 @@ class SpidersController < ApplicationController
 			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('광역3007') || key.eql?('광역3008')
+				buttons.unshift("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
@@ -503,11 +503,11 @@ class SpidersController < ApplicationController
 			buttons = ["교통 정보(베타)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('광역7000')
+				buttons.unshift("#{key}번[1]") if key.eql?('직행7000')
 			end
 
-			transport.busesInfo(:entrance_5).each do |key, value|
-				buttons.unshift("#{key}번[5]") if key.eql?('광역7002')
+			transport.busesInfo(:entrance_3).each do |key, value|
+				buttons.unshift("#{key}번[5]") if key.eql?('직행7002')
 			end
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
