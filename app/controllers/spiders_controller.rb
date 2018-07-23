@@ -14,7 +14,7 @@ class SpidersController < ApplicationController
 			buttonSymbol: :entrance_2
 		},
 		stop_3: {
-			buttonName: "3. 창현고, 유신고"
+			buttonName: "3. 창현고, 유신고",
 			buttonIdx: "[3]",
 			buttonSymbol: :highschool_1
 		},
