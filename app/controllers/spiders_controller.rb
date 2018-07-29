@@ -331,9 +331,9 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		# 교통 정보 기능 #
-	elsif @res.eql?("교통 정보(베타)")
+	elsif @res.eql?("교통 정보(베타)") || @res.eql?("교통 정보(돌아가기)")
 			url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
-			buttons = ["* 길찾기", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
 
 			@msg = {
 				message: {
@@ -364,14 +364,16 @@ class SpidersController < ApplicationController
 			end
 
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(베타)", "처음으로"]
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
 				buttons.unshift("#{key}번#{dataSet[:buttonIdx]}")
 			end
-
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 			buttons.sort!
+
+			buttons.concat(base)
 
 			@msg = {
 				message: {
@@ -398,7 +400,7 @@ class SpidersController < ApplicationController
 			res = @res.dup
 			@res.slice! "번#{dataSet[:buttonIdx]}" # 버스 번호
 			transport = Crawler::Transport.new()
-			buttons = [res, "교통 정보(베타)", "처음으로"]
+			buttons = [res, "교통 정보(돌아가기)", "처음으로"]
 
 			busNumText = "#{transport.busesInfo(dataSet[:buttonSymbol])[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
@@ -419,8 +421,8 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("* 길찾기")
-			buttons = ["강남역", "사당역", "교통 정보(베타)", "처음으로"]
+		elsif @res.eql?("* 주요 지역 버스 운행 정보")
+			buttons = ["강남역", "사당역", "교통 정보(돌아가기)", "처음으로"]
 
 			@msg = {
 				message: {
@@ -435,7 +437,8 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("강남역")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(베타)", "처음으로"]
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
@@ -443,6 +446,8 @@ class SpidersController < ApplicationController
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 			buttons.sort!
+
+			buttons.concat(base)
 
 			@msg = {
 				message: {
@@ -458,7 +463,8 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("사당역")
 			transport = Crawler::Transport.new()
-			buttons = ["교통 정보(베타)", "처음으로"]
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buttons.unshift("#{key}번[1]") if key.eql?('직행7000')
@@ -470,6 +476,8 @@ class SpidersController < ApplicationController
 
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 			buttons.sort!
+
+			buttons.concat(base)
 
 			@msg = {
 				message: {
