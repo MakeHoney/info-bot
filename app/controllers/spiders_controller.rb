@@ -370,8 +370,9 @@ class SpidersController < ApplicationController
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
 				buttons.unshift("#{key}번#{dataSet[:buttonIdx]}")
 			end
-			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
+			
 			buttons.sort!
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 
 			buttons.concat(base)
 
@@ -444,10 +445,10 @@ class SpidersController < ApplicationController
 				buttons.unshift("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 			buttons.sort!
 
 			buttons.concat(base)
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 
 			@msg = {
 				message: {
@@ -474,10 +475,10 @@ class SpidersController < ApplicationController
 				buttons.unshift("#{key}번[5]") if key.eql?('직행7002')
 			end
 
-			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 			buttons.sort!
 
 			buttons.concat(base)
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 
 			@msg = {
 				message: {
