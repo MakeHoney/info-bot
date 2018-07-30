@@ -423,7 +423,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("* 주요 지역 버스 운행 정보")
-			buttons = ["강남역", "사당역", "교통 정보(돌아가기)", "처음으로"]
+			buttons = ["강남역", "사당역", "인천종합터미널", "교통 정보(돌아가기)", "처음으로"]
 
 			@msg = {
 				message: {
