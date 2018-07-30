@@ -519,7 +519,7 @@ class SpidersController < ApplicationController
 			buses = []
 			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
-			transport.busesInfo(:highschool_1).each do |key, value|
+			transport.busesInfo(:highschool_2).each do |key, value|
 				buses.push("#{key}") if key.eql?('시외8862')
 			end
 
@@ -567,11 +567,11 @@ class SpidersController < ApplicationController
 			text += getOut
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(dataSet[:entrance_2])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_2])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:entrance_2])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_2])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:entrance_2])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_2])[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
@@ -594,7 +594,7 @@ class SpidersController < ApplicationController
 			buses = []
 			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
-			transport.busesInfo(:entrance_1).each do |key, value|
+			transport.busesInfo(:entrance_2).each do |key, value|
 				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
 					key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
 					buses.push("#{key}")
@@ -607,11 +607,11 @@ class SpidersController < ApplicationController
 			text += getOut
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(dataSet[:entrance_2])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_2])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:entrance_2])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_2])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:entrance_2])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_2])[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
