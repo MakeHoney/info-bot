@@ -365,7 +365,7 @@ class SpidersController < ApplicationController
 
 			transport = Crawler::Transport.new()
 			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
 				buttons.push("#{key}번#{dataSet[:buttonIdx]}")
@@ -374,7 +374,7 @@ class SpidersController < ApplicationController
 			buttons.sort!
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
-			buttons.concat(base)
+			buttons.concat(buttons)
 
 			@msg = {
 				message: {
@@ -407,7 +407,6 @@ class SpidersController < ApplicationController
 			busNumText = "#{transport.busesInfo(dataSet[:buttonSymbol])[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
 			transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats]}석\n"
-			res = @res.dup
 			transport.busesInfo(dataSet[:buttonSymbol])[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
 			vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:vehicleNum]}"
 
@@ -440,18 +439,26 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("강남역")
 			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buses = []
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.push("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
+				buttons.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buttons.sort!
+			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n"
 
-			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차"
+			buses.each do |bus|
+				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			end
+
+			text.chomp!
 
 			@msg = {
 				message: {
@@ -467,22 +474,33 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("사당역")
 			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buses = []
+			busStops = [:entrance_1, :entrance_3]
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.push("#{key}번[1]") if key.eql?('직행7000')
+				buses.push("#{key}") if key.eql?('직행7000')
 			end
 
 			transport.busesInfo(:entrance_3).each do |key, value|
-				buttons.push("#{key}번[5]") if key.eql?('직행7002')
+				buses.push("#{key}") if key.eql?('직행7002')
 			end
 
-			buttons.sort!
+			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			getOut = "\n사당역 하차\n\n"
 
-			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
-			getOut = "\n사당역 하차"
+			busStops.each do |busStop|
+				buses.each do |bus|
+					# 예외처리 ?
+					busNumText = "#{transport.busesInfo(dataSet[busStop])[bus][:number]}\n"
+					leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[busStop])[bus][:leftTime]}분\n"
+					transport.busesInfo(dataSet[busStop])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[busStop])[bus][:seats]}석\n"
+					transport.busesInfo(dataSet[busStop])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+					vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[busStop])[bus][:vehicleNum]}\n\n"
+					text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+				end
+			end
+			text.chomp!
 
 			@msg = {
 				message: {
@@ -498,18 +516,26 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("인천종합터미널")
 			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buses = []
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:highschool_1).each do |key, value|
-				buttons.push("#{key}번[3]") if key.eql?('시외8862')
+				buses.push("#{key}") if key.eql?('시외8862')
 			end
 
-			buttons.sort!
+			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n시외8862: 인천터미널 하차\n\n"
 
-			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n시외8862: 인천터미널 하차"
+			buses.each do |bus|
+				busNumText = "#{transport.busesInfo(dataSet[:highschool_1])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:highschool_1])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:highschool_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:highschool_1])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:highschool_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:highschool_1])[bus][:vehicleNum]}\n\n"
+				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			end
+
+			text.chomp!
 
 			@msg = {
 				message: {
@@ -525,23 +551,32 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("인계동(나혜석거리)")
 			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buses = []
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				if key.eql?('202') || key.eql?('80') || key.eql?('81') ||
 					key.eql?('88-1') || key.eql?('85') || key.eql?('99-2')
-					buttons.push("#{key}번[1]")
+					buses.push("#{key}")
 				end
 			end
 
-			buttons.sort!
-
-			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n202, 99-2: 중소기업은행 하차\n80, 81, 85, 88-1: 자유총연맹 하차"
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n202, 99-2: 중소기업은행 하차\n80, 81, 85, 88-1: 자유총연맹 하차\n\n"
 
 			text += getOut
+
+			buses.each do |bus|
+				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			end
+
+			text.chomp!
+
 			@msg = {
 				message: {
 					text: text
@@ -556,23 +591,32 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("수원역")
 			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
+			buses = []
+			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
 					key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
-					buttons.push("#{key}번[1]")
+					buses.push("#{key}")
 				end
 			end
 
-			buttons.sort!
-
-			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n수원역.AK플라자 하차"
+			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n수원역.AK플라자 하차\n\n"
 
 			text += getOut
+
+			buses.each do |bus|
+				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
+				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			end
+
+			text.chomp!
+
 			@msg = {
 				message: {
 					text: text
