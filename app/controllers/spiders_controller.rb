@@ -446,7 +446,7 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007[1]: 강남역.역삼세무서 하차\n직행3008[1]: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
 				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
