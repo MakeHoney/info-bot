@@ -443,7 +443,7 @@ class SpidersController < ApplicationController
 			buttons = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
+				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
 			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
