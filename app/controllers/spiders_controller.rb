@@ -562,8 +562,8 @@ class SpidersController < ApplicationController
 			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')
-					|| key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
+				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
+					key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
 					buttons.push("#{key}번[1]")
 				end
 			end
