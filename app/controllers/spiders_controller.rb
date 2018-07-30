@@ -446,7 +446,7 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007[1]: 강남역.역삼세무서 하차\n직행3008[1]: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007[1]: 강남역.역삼세무서 하차\n직행3008[1]: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
 				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
@@ -486,7 +486,7 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('직행7002')
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			busStops.each do |busStop|
 				buses.each do |bus|
@@ -522,7 +522,7 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('시외8862')
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862[3]: 인천터미널 하차\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862: 인천터미널 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
 				busNumText = "#{transport.busesInfo(:highschool_1)[bus][:number]} [3]\n"
@@ -559,7 +559,7 @@ class SpidersController < ApplicationController
 				end
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n202[2], 99-2[2]: 중소기업은행 하차\n80[2], 81[2], 85[2], 88-1[2]: 자유총연맹 하차\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n202, 99-2 : 중소기업은행 하차\n80, 81, 85, 88-1 : 자유총연맹 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
 				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
@@ -596,7 +596,7 @@ class SpidersController < ApplicationController
 				end
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n수원역.AK플라자 하차(모두 2번 정류장)\n\n" : text = "조회되는 버스가 없습니다."
+			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n모두 수원역.AK플라자 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
 				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
