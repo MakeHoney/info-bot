@@ -365,7 +365,7 @@ class SpidersController < ApplicationController
 
 			transport = Crawler::Transport.new()
 			buttons = []
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
 				buttons.push("#{key}번#{dataSet[:buttonIdx]}")
@@ -374,7 +374,7 @@ class SpidersController < ApplicationController
 			buttons.sort!
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
-			buttons.concat(buttons)
+			buttons.concat(base)
 
 			@msg = {
 				message: {
