@@ -446,11 +446,10 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n"
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007[1]: 강남역.역삼세무서 하차\n직행3008[1]: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]}\n"
+				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
 				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
 				transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
 				transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
@@ -458,6 +457,7 @@ class SpidersController < ApplicationController
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
+			# chomp doesn't work
 			text.chomp!
 
 			@msg = {
@@ -486,8 +486,7 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('직행7002')
 			end
 
-			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
-			getOut = "\n사당역 하차\n\n"
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			busStops.each do |busStop|
 				buses.each do |bus|
@@ -523,11 +522,10 @@ class SpidersController < ApplicationController
 				buses.push("#{key}") if key.eql?('시외8862')
 			end
 
-			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n시외8862: 인천터미널 하차\n\n"
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862[3]: 인천터미널 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:highschool_1)[bus][:number]}\n"
+				busNumText = "#{transport.busesInfo(:highschool_1)[bus][:number]} [3]\n"
 				leftTimeText = "남은 시간: #{transport.busesInfo(:highschool_1)[bus][:leftTime]}분\n"
 				transport.busesInfo(:highschool_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:highschool_1)[bus][:seats]}석\n"
 				transport.busesInfo(:highschool_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
@@ -561,13 +559,10 @@ class SpidersController < ApplicationController
 				end
 			end
 
-			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n202, 99-2: 중소기업은행 하차\n80, 81, 85, 88-1: 자유총연맹 하차\n\n"
-
-			text += getOut
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n202[2], 99-2[2]: 중소기업은행 하차\n80[2], 81[2], 85[2], 88-1[2]: 자유총연맹 하차\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]}\n"
+				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
 				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
 				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
 				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
@@ -601,13 +596,10 @@ class SpidersController < ApplicationController
 				end
 			end
 
-			buttons.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n수원역.AK플라자 하차\n\n"
-
-			text += getOut
+			buses.length > 2 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n수원역.AK플라자 하차(모두 2번 정류장)\n\n" : text = "조회되는 버스가 없습니다."
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]}\n"
+				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
 				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
 				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
 				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
