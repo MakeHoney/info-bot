@@ -368,11 +368,11 @@ class SpidersController < ApplicationController
 			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
-				buttons.unshift("#{key}번#{dataSet[:buttonIdx]}")
+				buttons.push("#{key}번#{dataSet[:buttonIdx]}")
 			end
 
 			buttons.sort!
-			buttons.length > 2 ? text = "버스를 선택해 주세요! 괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
 			buttons.concat(base)
 
@@ -425,7 +425,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("* 주요 지역 버스 운행 정보")
-			buttons = ["강남역", "사당역", "인천종합터미널", "교통 정보(돌아가기)", "처음으로"]
+			buttons = ["강남역", "사당역", "인천종합터미널", "인계동(나혜석거리)", "수원역", "교통 정보(돌아가기)", "처음으로"]
 
 			@msg = {
 				message: {
@@ -444,13 +444,13 @@ class SpidersController < ApplicationController
 			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
+				buttons.push("#{key}번[1]") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
 			buttons.sort!
 
 			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요! 괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
 			@msg = {
 				message: {
@@ -470,17 +470,17 @@ class SpidersController < ApplicationController
 			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buttons.unshift("#{key}번[1]") if key.eql?('직행7000')
+				buttons.push("#{key}번[1]") if key.eql?('직행7000')
 			end
 
 			transport.busesInfo(:entrance_3).each do |key, value|
-				buttons.unshift("#{key}번[5]") if key.eql?('직행7002')
+				buttons.push("#{key}번[5]") if key.eql?('직행7002')
 			end
 
 			buttons.sort!
 
 			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요! 괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
 			@msg = {
 				message: {
@@ -500,13 +500,14 @@ class SpidersController < ApplicationController
 			base = ["교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:highschool_1).each do |key, value|
-				buttons.unshift("#{key}번[3]") if key.eql?('시외8862')
+				buttons.push("#{key}번[3]") if key.eql?('시외8862')
 			end
 
 			buttons.sort!
 
 			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요! 괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n시외8862: 인천터미널 하차\n"
 
 			@msg = {
 				message: {
@@ -520,6 +521,68 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
+		elsif @res.eql?("인계동(나혜석거리)")
+			transport = Crawler::Transport.new()
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
+
+			transport.busesInfo(:entrance_1).each do |key, value|
+				if key.eql?('202') || key.eql?('80') || key.eql?('81') ||
+					key.eql?('88-1') || key.eql?('85') || key.eql?('99-2')
+					buttons.push("#{key}번[1]")
+				end
+			end
+
+			buttons.sort!
+
+			buttons.concat(base)
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n202, 99-2: 중소기업은행 하차\n
+			80, 81, 85, 88-1: 자유총연맹 하차"
+
+			text += getOut
+			@msg = {
+				message: {
+					text: text
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+
+			render json: @msg, status: :ok
+
+		elsif @res.eql?("수원역")
+			transport = Crawler::Transport.new()
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
+
+			transport.busesInfo(:entrance_1).each do |key, value|
+				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')
+					|| key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
+					buttons.push("#{key}번[1]")
+				end
+			end
+
+			buttons.sort!
+
+			buttons.concat(base)
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n수원역.AK플라자 하차"
+
+			text += getOut
+			@msg = {
+				message: {
+					text: text
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+
+			render json: @msg, status: :ok
 
 		elsif @res.eql?("처음으로")
 			@msg = {
