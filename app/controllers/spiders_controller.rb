@@ -440,7 +440,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("강남역")
 			transport = Crawler::Transport.new()
 			buses = []
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
@@ -476,7 +476,7 @@ class SpidersController < ApplicationController
 			transport = Crawler::Transport.new()
 			buses = []
 			busStops = [:entrance_1, :entrance_3]
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				buses.push("#{key}") if key.eql?('직행7000')
@@ -516,7 +516,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("인천종합터미널")
 			transport = Crawler::Transport.new()
 			buses = []
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:highschool_2).each do |key, value|
 				buses.push("#{key}") if key.eql?('시외8862')
@@ -550,7 +550,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("인계동(나혜석거리)")
 			transport = Crawler::Transport.new()
 			buses = []
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
 				if key.eql?('202') || key.eql?('80') || key.eql?('81') ||
@@ -587,7 +587,7 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("수원역")
 			transport = Crawler::Transport.new()
 			buses = []
-			buttons = ["교통 정보(돌아가기)", "처음으로"]
+			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_2).each do |key, value|
 				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
