@@ -56,7 +56,7 @@ class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(베타)"]
+			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
 		}
 		render json: @msg, status: :ok
 	end
@@ -331,7 +331,7 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		# 교통 정보 기능 #
-	elsif @res.eql?("교통 정보(베타)") || @res.eql?("교통 정보(돌아가기)")
+	elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
 			url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
 			buttons = ["* 주요 지역 버스 운행 정보", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
 
@@ -528,7 +528,7 @@ class SpidersController < ApplicationController
 					},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보(베타)"]
+					buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
 				}
 			}
 			render json: @msg, status: :ok
