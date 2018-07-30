@@ -370,7 +370,7 @@ class SpidersController < ApplicationController
 			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
 				buttons.unshift("#{key}번#{dataSet[:buttonIdx]}")
 			end
-			
+
 			buttons.sort!
 			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
 
@@ -398,7 +398,6 @@ class SpidersController < ApplicationController
 				end
 			end
 
-			res = @res.dup
 			@res.slice! "번#{dataSet[:buttonIdx]}" # 버스 번호
 			transport = Crawler::Transport.new()
 			buttons = [res, "교통 정보(돌아가기)", "처음으로"]
@@ -406,6 +405,7 @@ class SpidersController < ApplicationController
 			busNumText = "#{transport.busesInfo(dataSet[:buttonSymbol])[@res][:number]}\n"
 			leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
 			transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats]}석\n"
+			res = @res.dup
 			transport.busesInfo(dataSet[:buttonSymbol])[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
 			vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:vehicleNum]}"
 
@@ -491,6 +491,33 @@ class SpidersController < ApplicationController
 			}
 
 			render json: @msg, status: :ok
+
+		elsif @res.eql?("인천종합터미널")
+			transport = Crawler::Transport.new()
+			buttons = []
+			base = ["교통 정보(돌아가기)", "처음으로"]
+
+			transport.busesInfo(:highschool_1).each do |key, value|
+				buttons.unshift("#{key}번[3]") if key.eql?('시외8862')
+			end
+
+			buttons.sort!
+
+			buttons.concat(base)
+			buttons.length > 2 ? text = "버스를 선택해 주세요!" : text = "조회되는 버스가 없습니다."
+
+			@msg = {
+				message: {
+					text: text
+				},
+				keyboard: {
+					type: "buttons",
+					buttons: buttons
+				}
+			}
+
+			render json: @msg, status: :ok
+
 
 		elsif @res.eql?("처음으로")
 			@msg = {
