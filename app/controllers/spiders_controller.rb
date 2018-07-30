@@ -450,11 +450,11 @@ class SpidersController < ApplicationController
 			getOut = "\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n"
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:entrance_1])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_1])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_1])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:entrance_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_1])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
+				transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
+				transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_1)[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
@@ -492,11 +492,11 @@ class SpidersController < ApplicationController
 			busStops.each do |busStop|
 				buses.each do |bus|
 					# 예외처리 ?
-					busNumText = "#{transport.busesInfo(dataSet[busStop])[bus][:number]}\n"
-					leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[busStop])[bus][:leftTime]}분\n"
-					transport.busesInfo(dataSet[busStop])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[busStop])[bus][:seats]}석\n"
-					transport.busesInfo(dataSet[busStop])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-					vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[busStop])[bus][:vehicleNum]}\n\n"
+					busNumText = "#{transport.busesInfo(busStop)[bus][:number]}\n"
+					leftTimeText = "남은 시간: #{transport.busesInfo(busStop)[bus][:leftTime]}분\n"
+					transport.busesInfo(busStop)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(busStop)[bus][:seats]}석\n"
+					transport.busesInfo(busStop)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+					vehicleNumText = "차량 번호: #{transport.busesInfo(busStop)[bus][:vehicleNum]}\n\n"
 					text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 				end
 			end
@@ -527,11 +527,11 @@ class SpidersController < ApplicationController
 			getOut = "\n시외8862: 인천터미널 하차\n\n"
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:highschool_1])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:highschool_1])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:highschool_1])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:highschool_1])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:highschool_1])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:highschool_1])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(:highschool_1)[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(:highschool_1)[bus][:leftTime]}분\n"
+				transport.busesInfo(:highschool_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:highschool_1)[bus][:seats]}석\n"
+				transport.busesInfo(:highschool_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(:highschool_1)[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
@@ -567,11 +567,11 @@ class SpidersController < ApplicationController
 			text += getOut
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:entrance_2])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_2])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:entrance_2])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_2])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:entrance_2])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_2])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
+				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
@@ -607,11 +607,11 @@ class SpidersController < ApplicationController
 			text += getOut
 
 			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(dataSet[:entrance_2])[bus][:number]}\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:entrance_2])[bus][:leftTime]}분\n"
-				transport.busesInfo(dataSet[:entrance_2])[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:entrance_2])[bus][:seats]}석\n"
-				transport.busesInfo(dataSet[:entrance_2])[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:entrance_2])[bus][:vehicleNum]}\n\n"
+				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]}\n"
+				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
+				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
 				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 			end
 
