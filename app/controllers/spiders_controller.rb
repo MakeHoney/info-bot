@@ -398,6 +398,8 @@ class SpidersController < ApplicationController
 				end
 			end
 
+			res = @res.dup
+
 			@res.slice! "번#{dataSet[:buttonIdx]}" # 버스 번호
 			transport = Crawler::Transport.new()
 			buttons = [res, "교통 정보(돌아가기)", "처음으로"]
