@@ -429,7 +429,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: "선택 지역으로 가는 버스 중 대기시간이 존재하는 버스가 버스번호[정류장번호] 형식으로 제공됩니다."
+					text: "대기시간이 존재하는 버스가 제공됩니다."
 				},
 				keyboard: {
 					type: "buttons",
@@ -450,7 +450,9 @@ class SpidersController < ApplicationController
 			buttons.sort!
 
 			buttons.concat(base)
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
+			getOut = "\n직행3007: 강남역.역삼세무서 하차\n
+			직행3008: 강남역나라빌딩앞 하차"
 
 			@msg = {
 				message: {
@@ -481,6 +483,7 @@ class SpidersController < ApplicationController
 
 			buttons.concat(base)
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			getOut = "\n사당역 하차"
 
 			@msg = {
 				message: {
@@ -507,7 +510,7 @@ class SpidersController < ApplicationController
 
 			buttons.concat(base)
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n시외8862: 인천터미널 하차\n"
+			getOut = "\n시외8862: 인천터미널 하차"
 
 			@msg = {
 				message: {
