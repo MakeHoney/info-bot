@@ -451,8 +451,7 @@ class SpidersController < ApplicationController
 
 			buttons.concat(base)
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n직행3007: 강남역.역삼세무서 하차\n
-			직행3008: 강남역나라빌딩앞 하차"
+			getOut = "\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차"
 
 			@msg = {
 				message: {
@@ -540,8 +539,7 @@ class SpidersController < ApplicationController
 
 			buttons.concat(base)
 			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다.\n" : text = "조회되는 버스가 없습니다."
-			getOut = "\n202, 99-2: 중소기업은행 하차\n
-			80, 81, 85, 88-1: 자유총연맹 하차"
+			getOut = "\n202, 99-2: 중소기업은행 하차\n80, 81, 85, 88-1: 자유총연맹 하차"
 
 			text += getOut
 			@msg = {
