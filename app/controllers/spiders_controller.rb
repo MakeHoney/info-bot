@@ -56,22 +56,20 @@ class SpidersController < ApplicationController
 	def keyboard
 		@msg = {
 			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
+			# buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
+			buttons: ["도서관 여석 확인", "교통 정보"]
 		}
 		render json: @msg, status: :ok
 	end
 
 	def chat
-		# declare global variables
-
-		# notice = Crawler::Notice.new()
-		food_global = Crawler::SchoolFood.new()
-		dButtons = dynamic(
-			[food_global.studentFoodCourt,
-			food_global.dormFoodCourt[:isOpen],
-			food_global.facultyFoodCourt[:isOpen]],
-			["학생식당", "기숙사식당", "교직원식당"],
-			["처음으로"])
+		# food_global = Crawler::SchoolFood.new()
+		# dButtons = dynamic(
+		# 	[food_global.studentFoodCourt,
+		# 	food_global.dormFoodCourt[:isOpen],
+		# 	food_global.facultyFoodCourt[:isOpen]],
+		# 	["학생식당", "기숙사식당", "교직원식당"],
+		# 	["처음으로"])
 
 		@res = params[:content]
 		@user_key = params[:user_key]
@@ -628,7 +626,8 @@ class SpidersController < ApplicationController
 					},
 				keyboard: {
 					type: "buttons",
-					buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
+					# buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
+					buttons: ["도서관 여석 확인", "교통 정보"]
 				}
 			}
 			render json: @msg, status: :ok
