@@ -370,7 +370,7 @@ class SpidersController < ApplicationController
 			end
 
 			buttons.sort!
-			buttons.length > 2 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
+			buttons.length > 0 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
 
 			buttons.concat(base)
 
