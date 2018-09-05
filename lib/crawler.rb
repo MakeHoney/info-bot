@@ -7,7 +7,7 @@ require 'pp'
 module Crawler
 	class SchoolFood
 		def initialize
-			url = 'http://www.ajou.ac.kr/kr/life/food.jsp'
+			url = 'http://www.ajou.ac.kr/main/life/food.jsp'
 
 			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
 			html = fixHtml(open(url).read)
