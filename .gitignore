@@ -19,9 +19,7 @@
 .byebug_history
 
 # add
-/bin/
 /db/
-/log/
 /public/
 /test/
 /tmp/
