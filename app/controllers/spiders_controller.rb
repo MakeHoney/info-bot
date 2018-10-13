@@ -210,7 +210,8 @@ class SpidersController < ApplicationController
 				food.dormFoodCourt[:lunch],
 				food.dormFoodCourt[:dinner],
 				food.dormFoodCourt[:snack]],
-				["조식", "중식", "석식", "분식"],
+                # ["조식", "중식", "석식", "분식"],
+                ["조식", "중식", "석식"],
 				["처음으로"])
 
 			@msg = {
@@ -266,19 +267,19 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("분식")
-			food = Crawler::SchoolFood.new()
+		# elsif @res.eql?("분식")
+		# 	food = Crawler::SchoolFood.new()
 
-			@msg = {
-				message: {
-					text: food.dormFoodCourt[:isOpen]
-				},
-				keyboard: {
-					type: "buttons",
-					buttons: dButtons
-				}
-			}
-			render json: @msg, status: :ok
+		# 	@msg = {
+		# 		message: {
+		# 			text: food.dormFoodCourt[:isOpen]
+		# 		},
+		# 		keyboard: {
+		# 			type: "buttons",
+		# 			buttons: dButtons
+		# 		}
+		# 	}
+		# 	render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
 			food = Crawler::SchoolFood.new()
@@ -471,28 +472,34 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("사당역")
 			transport = Crawler::Transport.new()
-			buses = []
-			busStops = [:entrance_1, :entrance_3]
+            busStops = []
+            buses = []
 			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 
 			transport.busesInfo(:entrance_1).each do |key, value|
-				buses.push("#{key}") if key.eql?('직행7000')
+                if key.eql?('직행7000')
+                    buses.push("#{key}") 
+                    busStops.push(:entrance_1)
+                end
 			end
 
-			transport.busesInfo(:entrance_3).each do |key, value|
-				buses.push("#{key}") if key.eql?('직행7002')
+            transport.busesInfo(:entrance_3).each do |key, value|
+                if key.eql?('직행7002')
+                    buses.push("#{key}")
+                    busStops.push(:entrance_3)
+                end
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
+            buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
 
-			busStops.each do |busStop|
+            busStops.each do |busStop|    
 				buses.each do |bus|
 					# 예외처리 ?
-					busNumText = "#{transport.busesInfo(busStop)[bus][:number]}\n"
-					leftTimeText = "남은 시간: #{transport.busesInfo(busStop)[bus][:leftTime]}분\n"
-					transport.busesInfo(busStop)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(busStop)[bus][:seats]}석\n"
-					transport.busesInfo(busStop)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-					vehicleNumText = "차량 번호: #{transport.busesInfo(busStop)[bus][:vehicleNum]}\n\n"
+					busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]}\n"
+					leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
+					transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
+					transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
+					vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_1)[bus][:vehicleNum]}\n\n"
 					text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
 				end
 			end
