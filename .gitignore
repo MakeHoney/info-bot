@@ -20,7 +20,6 @@
 
 # add
 /db/
-/public/
 /test/
 /tmp/
 /vendor/
