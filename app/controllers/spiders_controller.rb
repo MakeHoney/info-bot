@@ -209,7 +209,6 @@ class SpidersController < ApplicationController
 				[food.dormFoodCourt[:breakfast],
 				food.dormFoodCourt[:lunch],
 				food.dormFoodCourt[:dinner],
-				food.dormFoodCourt[:snack]],
                 # ["조식", "중식", "석식", "분식"],
                 ["조식", "중식", "석식"],
 				["처음으로"])
