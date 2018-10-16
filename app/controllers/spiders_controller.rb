@@ -133,14 +133,14 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("오늘의 학식")
 			dynamicText = "오늘은 식당을 운영하지 않습니다."
-			dynamicButtons = dynamic(
-				[
-                    @food.studentFoodCourt,
-				    @food.dormFoodCourt[:isOpen],
-				    @food.facultyFoodCourt[:isOpen]],
-				["학생식당", "기숙사식당", "교직원식당"],
-                ["처음으로"], 
-                dynamicText
+			dynamicButtons = dynamic([
+                @food.studentFoodCourt,
+                @food.dormFoodCourt[:isOpen],
+                @food.facultyFoodCourt[:isOpen]
+            ],
+			["학생식당", "기숙사식당", "교직원식당"],
+            ["처음으로"], 
+            dynamicText
             )
 
 			@msg = {
@@ -156,13 +156,12 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("학생식당")
-			dynamicButtons = dynamic(
-				[
-                    @food.dormFoodCourt[:isOpen],
-                    @food.facultyFoodCourt[:isOpen]
-                ],
-				["기숙사식당", "교직원식당"],
-                ["처음으로"]
+			dynamicButtons = dynamic([
+                @food.dormFoodCourt[:isOpen],
+                @food.facultyFoodCourt[:isOpen]
+            ],
+            ["기숙사식당", "교직원식당"],
+            ["처음으로"]
             )
 
 			@msg = {
@@ -177,14 +176,13 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("기숙사식당")
-			dynamicButtons = dynamic(
-				[
-                    @food.dormFoodCourt[:breakfast],
-				    @food.dormFoodCourt[:lunch],
-                    @food.dormFoodCourt[:dinner]
-                ],
-                ["조식", "중식", "석식"],
-                ["처음으로"]
+			dynamicButtons = dynamic([
+                @food.dormFoodCourt[:breakfast],
+				@food.dormFoodCourt[:lunch],
+                @food.dormFoodCourt[:dinner]
+            ],
+            ["조식", "중식", "석식"],
+            ["처음으로"]
             )
 
 			@msg = {
@@ -249,13 +247,12 @@ class SpidersController < ApplicationController
 		# 	render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
-			dynamicButtons = dynamic(
-				[
-                    @food.facultyFoodCourt[:lunch],
-                    @food.facultyFoodCourt[:dinner]
-                ],
-				["[교]중식", "[교]석식"],
-                ["처음으로"]
+			dynamicButtons = dynamic([
+                @food.facultyFoodCourt[:lunch],
+                @food.facultyFoodCourt[:dinner]
+            ],
+			["[교]중식", "[교]석식"],
+            ["처음으로"]
             )
 
 			@msg = {
