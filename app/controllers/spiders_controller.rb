@@ -12,9 +12,11 @@ class SpidersController < ApplicationController
         }
         @food = Crawler::SchoolFood.new()
         @dButtons = dynamic(
-			[@food.studentFoodCourt,
-			@food.dormFoodCourt[:isOpen],
-			@food.facultyFoodCourt[:isOpen]],
+			[
+                @food.studentFoodCourt,
+	            @food.dormFoodCourt[:isOpen],
+                @food.facultyFoodCourt[:isOpen]
+            ],
 			["학생식당", "기숙사식당", "교직원식당"],
             ["처음으로"]
         )
