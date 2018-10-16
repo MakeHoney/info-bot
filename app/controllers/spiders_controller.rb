@@ -1,39 +1,11 @@
 require 'crawler'
+require 'data_set'
 require 'uri'
 
 class SpidersController < ApplicationController
-	@@dataSetForTransport = {
-		stop_1: {
-			buttonName: "1. 아주대 정문 (맥날)",
-			buttonIdx: "[1]",
-			buttonSymbol: :entrance_1
-		},
-		stop_2: {
-			buttonName: "2. 아주대 정문 (KFC)",
-			buttonIdx: "[2]",
-			buttonSymbol: :entrance_2
-		},
-		stop_3: {
-			buttonName: "3. 창현고, 유신고",
-			buttonIdx: "[3]",
-			buttonSymbol: :highschool_1
-		},
-		stop_4: {
-			buttonName: "4. 창현고, 유신고",
-			buttonIdx: "[4]",
-			buttonSymbol: :highschool_2
-		},
-		stop_5: {
-			buttonName: "5. 아주대 후문",
-			buttonIdx: "[5]",
-			buttonSymbol: :entrance_3
-		},
-		stop_6: {
-			buttonName: "6. 아주대 후문",
-			buttonIdx: "[6]",
-			buttonSymbol: :entrance_4
-		}
-	}
+    def initialize
+        @dataSetForTransport = DataSet.dataSetForTransport
+    end
 
 	# 버튼을 동적으로 구성하게끔 만들어주는 메소드
 	# flags배열의 요소(elem)들 리턴값을 기준으로 버튼을 생성하여
@@ -349,11 +321,11 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-		elsif @res.eql?(@@dataSetForTransport[:stop_1][:buttonName]) || @res.eql?(@@dataSetForTransport[:stop_2][:buttonName]) ||
-					@res.eql?(@@dataSetForTransport[:stop_3][:buttonName]) || @res.eql?(@@dataSetForTransport[:stop_4][:buttonName]) ||
-					@res.eql?(@@dataSetForTransport[:stop_5][:buttonName]) || @res.eql?(@@dataSetForTransport[:stop_6][:buttonName])
+		elsif @res.eql?(@dataSetForTransport[:stop_1][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
+					@res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
+					@res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
 			dataSet = nil
-			@@dataSetForTransport.each do |key, value|
+			@dataSetForTransport.each do |key, value|
 				if value[:buttonName].eql?(@res)
 					dataSet = value.dup
 					break
@@ -384,11 +356,11 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.include?(@@dataSetForTransport[:stop_1][:buttonIdx]) || @res.include?(@@dataSetForTransport[:stop_2][:buttonIdx]) ||
-					@res.include?(@@dataSetForTransport[:stop_3][:buttonIdx]) || @res.include?(@@dataSetForTransport[:stop_4][:buttonIdx]) ||
-					@res.include?(@@dataSetForTransport[:stop_5][:buttonIdx]) || @res.include?(@@dataSetForTransport[:stop_6][:buttonIdx])
+		elsif @res.include?(@dataSetForTransport[:stop_1][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
+					@res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
+					@res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
 			dataSet = nil
-			@@dataSetForTransport.each do |key, value|
+			@dataSetForTransport.each do |key, value|
 				if @res.include?(value[:buttonIdx])
 					dataSet = value.dup
 					break
