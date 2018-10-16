@@ -11,6 +11,7 @@ class SpidersController < ApplicationController
             buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
         }
         @food = Crawler::SchoolFood.new()
+        @vacancy = Crawler::Vacancy.new()
         @dButtons = dynamic([
             @food.studentFoodCourt,
             @food.dormFoodCourt[:isOpen],
@@ -60,20 +61,18 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("C1 열람실")
-			vacancy = Crawler::Vacancy.new()
-			url = "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}"
-
+			_url = "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}"
 			@msg = {
 				message: {
-					text: vacancy.printVacancy[0],
+					text: @vacancy.printVacancy[0],
 					photo: {
-						url: URI.encode(url),
+						url: URI.encode(_url),
 						width: 720,
 						height: 630
 					},
 					message_button: {
 						label: "상세정보",
-						url: URI.encode(url)
+						url: URI.encode(_url)
 					}
 				},
 				keyboard: {
@@ -85,20 +84,18 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("D1 열람실")
-			vacancy = Crawler::Vacancy.new()
-			url = "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}"
-
+			_url = "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}"
 			@msg = {
 				message: {
-					text: vacancy.printVacancy[1],
+					text: @vacancy.printVacancy[1],
 					photo: {
-						url: URI.encode(url),
+						url: URI.encode(_url),
 						width: 720,
 						height: 630
 					},
 					message_button: {
 						label: "상세정보",
-						url: URI.encode(url)
+						url: URI.encode(_url)
 					}
 				},
 				keyboard: {
@@ -110,15 +107,19 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("C1 열람실 플러그 위치")
-			text = " * 플러그의 위치에 병아리가 있어요.\n
-					왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
-					(하단의 이미지는 실시간 이미지가 아닙니다.)\n
-					349, 380, 405 or 412, 444, 468, 473"
+            _url = "https://postfiles.pstatic.net/MjAxODA0MTZfNDIg/MDAxNTIzODMwODc5Mjg5.oSjyfCT19ZS4XSE5_AqJGqH9piblcEpPX79vqHJFaVQg.gQi6gQmAX8FgvGh9FHFkY8I7ke2l8V3CrpYZRH0RPm0g.PNG.pourmonreve3/image_3411826531523830501839.png?type=w773"
+            _text = "
+             * 플러그의 위치에 병아리가 있어요.\n
+            왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
+            (하단의 이미지는 실시간 이미지가 아닙니다.)\n
+            349, 380, 405 or 412, 444, 468, 473
+            "
+            
 			@msg = {
 				message: {
-					text: text,
+					text: _text,
 					photo: {
-						url: "https://postfiles.pstatic.net/MjAxODA0MTZfNDIg/MDAxNTIzODMwODc5Mjg5.oSjyfCT19ZS4XSE5_AqJGqH9piblcEpPX79vqHJFaVQg.gQi6gQmAX8FgvGh9FHFkY8I7ke2l8V3CrpYZRH0RPm0g.PNG.pourmonreve3/image_3411826531523830501839.png?type=w773",
+						url: _url,
 						width: 720,
 						height: 200
 					}
