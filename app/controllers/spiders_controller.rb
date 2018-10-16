@@ -318,11 +318,11 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
         elsif @res.eql?(@dataSetForTransport[:stop_1][:buttonName]) || 
-            @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
-            @res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || 
-            @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
-            @res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || 
-            @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
+                @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
+                @res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || 
+                @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
+                @res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || 
+                @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
             
             _base = ["교통 정보(돌아가기)", "처음으로"]
             _buttons = []
@@ -357,11 +357,11 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
         elsif @res.include?(@dataSetForTransport[:stop_1][:buttonIdx]) || 
-            @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
-            @res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || 
-            @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
-            @res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || 
-            @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
+                @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
+                @res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || 
+                @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
+                @res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || 
+                @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
             
             _dataSet = nil
 			@dataSetForTransport.each do |key, value|

@@ -43,10 +43,10 @@ module DataSet
 
     class ForCrawler
         class << self
-            attr_accessor :stationInfoForTransport
+            attr_accessor :StationInfoForTransport
         end
         
-        @stationInfoForTransport = {
+        @StationInfoForTransport = {
             entrance_1: { 						# 정문 (맥날)
                 id: '203000066',
                 name: '아주대 정문 (맥날)'
