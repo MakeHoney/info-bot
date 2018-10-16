@@ -4,7 +4,20 @@ require 'uri'
 
 class SpidersController < ApplicationController
     def initialize
-        @dataSetForTransport = DataSet.dataSetForTransport
+        #datasetfor trnaport -> 이름변경 + dataset::forcontroller만 할당
+        @dataSetForTransport = DataSet::ForController.ButtonInfoForTransport
+        @msg = {
+            type: "buttons",
+            buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
+        }
+        @food = Crawler::SchoolFood.new()
+        @dButtons = dynamic(
+			[@food.studentFoodCourt,
+			@food.dormFoodCourt[:isOpen],
+			@food.facultyFoodCourt[:isOpen]],
+			["학생식당", "기숙사식당", "교직원식당"],
+            ["처음으로"]
+        )
     end
 
 	# 버튼을 동적으로 구성하게끔 만들어주는 메소드
@@ -26,28 +39,13 @@ class SpidersController < ApplicationController
 	end
 
 	def keyboard
-		@msg = {
-			type: "buttons",
-			buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
-		}
 		render json: @msg, status: :ok
 	end
 
 	def chat
-		food_global = Crawler::SchoolFood.new()
-		dButtons = dynamic(
-			[food_global.studentFoodCourt,
-			food_global.dormFoodCourt[:isOpen],
-			food_global.facultyFoodCourt[:isOpen]],
-			["학생식당", "기숙사식당", "교직원식당"],
-			["처음으로"])
-
-		@res = params[:content]
-		@user_key = params[:user_key]
-
-
-		# 기능 분기문 시작
-		# 도서관 기능 #
+        @res = params[:content]
+        @user_key = params[:user_key]
+		
 		if @res.eql?("도서관 여석 확인")
 			@msg = {
 				message: {
@@ -132,17 +130,17 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-
-		# 학식 기능 #
 		elsif @res.eql?("오늘의 학식")
-			food = Crawler::SchoolFood.new()
 			dynamicText = "오늘은 식당을 운영하지 않습니다."
 			dynamicButtons = dynamic(
-				[food.studentFoodCourt,
-				food.dormFoodCourt[:isOpen],
-				food.facultyFoodCourt[:isOpen]],
+				[
+                    @food.studentFoodCourt,
+				    @food.dormFoodCourt[:isOpen],
+				    @food.facultyFoodCourt[:isOpen]],
 				["학생식당", "기숙사식당", "교직원식당"],
-				["처음으로"], dynamicText)
+                ["처음으로"], 
+                dynamicText
+            )
 
 			@msg = {
 				message: {
@@ -157,12 +155,14 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("학생식당")
-			food = Crawler::SchoolFood.new()
 			dynamicButtons = dynamic(
-				[food.dormFoodCourt[:isOpen],
-				food.facultyFoodCourt[:isOpen]],
+				[
+                    @food.dormFoodCourt[:isOpen],
+                    @food.facultyFoodCourt[:isOpen]
+                ],
 				["기숙사식당", "교직원식당"],
-				["처음으로"])
+                ["처음으로"]
+            )
 
 			@msg = {
 				message: {
@@ -176,14 +176,15 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("기숙사식당")
-			food = Crawler::SchoolFood.new()
 			dynamicButtons = dynamic(
-				[food.dormFoodCourt[:breakfast],
-				food.dormFoodCourt[:lunch],
-				food.dormFoodCourt[:dinner]],
-                # ["조식", "중식", "석식", "분식"],
+				[
+                    @food.dormFoodCourt[:breakfast],
+				    @food.dormFoodCourt[:lunch],
+                    @food.dormFoodCourt[:dinner]
+                ],
                 ["조식", "중식", "석식"],
-				["처음으로"])
+                ["처음으로"]
+            )
 
 			@msg = {
 				message: {
@@ -197,43 +198,37 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("조식")
-			food = Crawler::SchoolFood.new()
-
 			@msg = {
 				message: {
-					text: food.dormFoodCourt[:breakfast]
+					text: @food.dormFoodCourt[:breakfast]
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dButtons
+					buttons: @dButtons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("중식")
-			food = Crawler::SchoolFood.new()
-
 			@msg = {
 				message: {
-					text: food.dormFoodCourt[:lunch]
+					text: @food.dormFoodCourt[:lunch]
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dButtons
+					buttons: @dButtons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("석식")
-			food = Crawler::SchoolFood.new()
-
 			@msg = {
 				message: {
-					text: food.dormFoodCourt[:dinner]
+					text: @food.dormFoodCourt[:dinner]
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dButtons
+					buttons: @dButtons
 				}
 			}
 			render json: @msg, status: :ok
@@ -247,18 +242,20 @@ class SpidersController < ApplicationController
 		# 		},
 		# 		keyboard: {
 		# 			type: "buttons",
-		# 			buttons: dButtons
+		# 			buttons: @dButtons
 		# 		}
 		# 	}
 		# 	render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
-			food = Crawler::SchoolFood.new()
 			dynamicButtons = dynamic(
-				[food.facultyFoodCourt[:lunch],
-				food.facultyFoodCourt[:dinner]],
+				[
+                    @food.facultyFoodCourt[:lunch],
+                    @food.facultyFoodCourt[:dinner]
+                ],
 				["[교]중식", "[교]석식"],
-				["처음으로"])
+                ["처음으로"]
+            )
 
 			@msg = {
 				message: {
@@ -272,29 +269,25 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("[교]중식")
-			food = Crawler::SchoolFood.new()
-
 			@msg = {
 				message: {
-					text: food.facultyFoodCourt[:lunch]
+					text: @food.facultyFoodCourt[:lunch]
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dButtons
+					buttons: @dButtons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("[교]석식")
-			food = Crawler::SchoolFood.new()
-
 			@msg = {
 				message: {
-					text: food.facultyFoodCourt[:dinner]
+					text: @food.facultyFoodCourt[:dinner]
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dButtons
+					buttons: @dButtons
 				}
 			}
 			render json: @msg, status: :ok
