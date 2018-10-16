@@ -10,8 +10,12 @@ class SpidersController < ApplicationController
             type: "buttons",
             buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
         }
+
+        # 세가지 인스턴스 분산시켜 초기화하기 (생성자 밖에서)
+        # 생성자 안에서 모두 선언시 성능저하문제
         @food = Crawler::SchoolFood.new()
         @vacancy = Crawler::Vacancy.new()
+        @transport = Crawler::Transport.new()
         @dButtons = dynamic([
             @food.studentFoodCourt,
             @food.dormFoodCourt[:isOpen],
@@ -108,12 +112,11 @@ class SpidersController < ApplicationController
 
 		elsif @res.eql?("C1 열람실 플러그 위치")
             _url = "https://postfiles.pstatic.net/MjAxODA0MTZfNDIg/MDAxNTIzODMwODc5Mjg5.oSjyfCT19ZS4XSE5_AqJGqH9piblcEpPX79vqHJFaVQg.gQi6gQmAX8FgvGh9FHFkY8I7ke2l8V3CrpYZRH0RPm0g.PNG.pourmonreve3/image_3411826531523830501839.png?type=w773"
-            _text = "
-             * 플러그의 위치에 병아리가 있어요.\n
+            # 앱 내에서의 메시지 형태 확인하기
+            _text = " * 플러그의 위치에 병아리가 있어요.\n
             왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
             (하단의 이미지는 실시간 이미지가 아닙니다.)\n
-            349, 380, 405 or 412, 444, 468, 473
-            "
+            349, 380, 405 or 412, 444, 468, 473"
             
 			@msg = {
 				message: {
@@ -132,32 +135,33 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-		elsif @res.eql?("오늘의 학식")
-			dynamicText = "오늘은 식당을 운영하지 않습니다."
-			dynamicButtons = dynamic([
+        elsif @res.eql?("오늘의 학식")
+            _defaultText = "오늘은 식당을 운영하지 않습니다."
+			_dynamicText = _defaultText
+			_dynamicButtons = dynamic([
                 @food.studentFoodCourt,
                 @food.dormFoodCourt[:isOpen],
                 @food.facultyFoodCourt[:isOpen]
             ],
 			["학생식당", "기숙사식당", "교직원식당"],
             ["처음으로"], 
-            dynamicText
+            _dynamicText
             )
 
 			@msg = {
 				message: {
-					text: dynamicText
+					text: _dynamicText
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dynamicButtons
+					buttons: _dynamicButtons
 				}
 			}
 
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("학생식당")
-			dynamicButtons = dynamic([
+			_dynamicButtons = dynamic([
                 @food.dormFoodCourt[:isOpen],
                 @food.facultyFoodCourt[:isOpen]
             ],
@@ -171,13 +175,13 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dynamicButtons
+					buttons: _dynamicButtons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("기숙사식당")
-			dynamicButtons = dynamic([
+			_dynamicButtons = dynamic([
                 @food.dormFoodCourt[:breakfast],
 				@food.dormFoodCourt[:lunch],
                 @food.dormFoodCourt[:dinner]
@@ -192,7 +196,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dynamicButtons
+					buttons: _dynamicButtons
 				}
 			}
 			render json: @msg, status: :ok
@@ -248,7 +252,7 @@ class SpidersController < ApplicationController
 		# 	render json: @msg, status: :ok
 
 		elsif @res.eql?("교직원식당")
-			dynamicButtons = dynamic([
+			_dynamicButtons = dynamic([
                 @food.facultyFoodCourt[:lunch],
                 @food.facultyFoodCourt[:dinner]
             ],
@@ -262,7 +266,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: dynamicButtons
+					buttons: _dynamicButtons
 				}
 			}
 			render json: @msg, status: :ok
@@ -292,100 +296,112 @@ class SpidersController < ApplicationController
 			render json: @msg, status: :ok
 
 		# 교통 정보 기능 #
-	elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
-			url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
-			buttons = ["* 주요 지역 버스 운행 정보", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
+	    elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
+			_url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
+			_buttons = ["* 주요 지역 버스 운행 정보", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
 
 			@msg = {
 				message: {
 					text: "정류장을 선택해 주세요!",
 					photo: {
-						url: url,
+						url: _url,
 						width: 350,
 						height: 720
 					}
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
 			render json: @msg, status: :ok
 
-		elsif @res.eql?(@dataSetForTransport[:stop_1][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
-					@res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
-					@res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
-			dataSet = nil
+        elsif @res.eql?(@dataSetForTransport[:stop_1][:buttonName]) || 
+            @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
+            @res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || 
+            @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
+            @res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || 
+            @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
+            
+            _base = ["교통 정보(돌아가기)", "처음으로"]
+            _buttons = []
+            _dataSet = nil
+
 			@dataSetForTransport.each do |key, value|
 				if value[:buttonName].eql?(@res)
-					dataSet = value.dup
+					_dataSet = value.dup
 					break
 				end
 			end
 
-			transport = Crawler::Transport.new()
-			buttons = []
-			base = ["교통 정보(돌아가기)", "처음으로"]
-
-			transport.busesInfo(dataSet[:buttonSymbol]).each do |key, value|
-				buttons.push("#{key}번#{dataSet[:buttonIdx]}")
+			@transport.busesInfo(_dataSet[:buttonSymbol]).each do |key, value|
+				_buttons.push("#{key}번#{_dataSet[:buttonIdx]}")
 			end
 
-			buttons.sort!
-			buttons.length > 0 ? text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : text = "조회되는 버스가 없습니다."
-
-			buttons.concat(base)
+			_buttons.sort!
+            _buttons.length > 0 ? 
+            _text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : 
+            _text = "조회되는 버스가 없습니다."
+			_buttons.concat(base)
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 			render json: @msg, status: :ok
 
-		elsif @res.include?(@dataSetForTransport[:stop_1][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
-					@res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
-					@res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
-			dataSet = nil
+        elsif @res.include?(@dataSetForTransport[:stop_1][:buttonIdx]) || 
+            @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
+            @res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || 
+            @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
+            @res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || 
+            @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
+            
+            _dataSet = nil
 			@dataSetForTransport.each do |key, value|
 				if @res.include?(value[:buttonIdx])
-					dataSet = value.dup
+					_dataSet = value.dup
 					break
 				end
 			end
 
-			res = @res.dup
+            @res.slice! "번#{_dataSet[:buttonIdx]}" # 버스 번호
+            
+			_res = @res.dup
+			_buttons = [_res, "교통 정보(돌아가기)", "처음으로"]
+			_busNumText = "#{@transport.busesInfo(_dataSet[:buttonSymbol])[@res][:number]}\n"
+			_leftTimeText = "남은 시간: #{@transport.busesInfo(_dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
+            _vehicleNumText = "차량 번호: #{@transport.busesInfo(_dataSet[:buttonSymbol])[@res][:vehicleNum]}"
+            
+            @transport.busesInfo(_dataSet[:buttonSymbol])[@res][:seats] == "-1" ? 
+            _leftSeatText = '' : 
+            _leftSeatText = "남은 좌석: #{@transport.busesInfo(_dataSet[:buttonSymbol])[@res][:seats]}석\n"
 
-			@res.slice! "번#{dataSet[:buttonIdx]}" # 버스 번호
-			transport = Crawler::Transport.new()
-			buttons = [res, "교통 정보(돌아가기)", "처음으로"]
+            @transport.busesInfo(_dataSet[:buttonSymbol])[@res][:isLowPlate] == "1" ?
+            _isLowPlateText = "저상 버스: O\n" : 
+            _isLowPlateText = "저상 버스: X\n"
 
-			busNumText = "#{transport.busesInfo(dataSet[:buttonSymbol])[@res][:number]}\n"
-			leftTimeText = "남은 시간: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
-			transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:seats]}석\n"
-			transport.busesInfo(dataSet[:buttonSymbol])[@res][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-			vehicleNumText = "차량 번호: #{transport.busesInfo(dataSet[:buttonSymbol])[@res][:vehicleNum]}"
-
-			text = busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			_text = _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("* 주요 지역 버스 운행 정보")
-			buttons = ["강남역", "사당역", "인천종합터미널", "인계동(나혜석거리)", "수원역", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["강남역", "사당역", "인천종합터미널", "인계동(나혜석거리)", "수원역", "교통 정보(돌아가기)", "처음으로"]
 
 			@msg = {
 				message: {
@@ -393,202 +409,233 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("강남역")
-			transport = Crawler::Transport.new()
-			buses = []
-			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buses = []
 
-			transport.busesInfo(:entrance_1).each do |key, value|
-				buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
+			@transport.busesInfo(:entrance_1).each do |key, value|
+				_buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n" : text = "조회되는 버스가 없습니다."
+            _buses.length > 0 ? 
+            _text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n" : 
+            _text = "조회되는 버스가 없습니다."
 
-			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
-				transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
-				transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_1)[bus][:vehicleNum]}\n\n"
-				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			_buses.each do |bus|
+				_busNumText = "#{@transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
+				_leftTimeText = "남은 시간: #{@transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{@transport.busesInfo(:entrance_1)[bus][:vehicleNum]}\n\n"
+                
+                @transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? 
+                _leftSeatText = '' : 
+                _leftSeatText = "남은 좌석: #{@transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
+
+                @transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? 
+                _isLowPlateText = "저상 버스: O\n" : 
+                _isLowPlateText = "저상 버스: X\n"
+
+				_text += _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 			end
-
 			# chomp doesn't work
-			text.chomp!
-
+            _text.chomp!
+            
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("사당역")
-			transport = Crawler::Transport.new()
-            busStops = []
-            buses = {}
-			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+            _busStops = []
+            _buses = {}
 
-			transport.busesInfo(:entrance_1).each do |key, value|
+			@transport.busesInfo(:entrance_1).each do |key, value|
                 if key.eql?('직행7000')
-                    # buses.push("#{key}")
+                    # _buses.push("#{key}")
                     # 아래 구조(buses[:entrance_1] = key 의 구조)는 임시 방편
                     # 문제가 있는 자료구조임 (한 정류장에 버스가 2대 이상이 되는 경우 확장성 x)
-                    buses[:entrance_1] = "#{key}"
-                    busStops.push(:entrance_1)
+                    _buses[:entrance_1] = "#{key}"
+                    _busStops.push(:entrance_1)
                 end
 			end
 
-            transport.busesInfo(:entrance_3).each do |key, value|
+            @transport.busesInfo(:entrance_3).each do |key, value|
                 if key.eql?('직행7002')
-                    # buses.push("#{key}")
-                    buses[:entrance_3] = "#{key}"
-                    busStops.push(:entrance_3)
+                    # _buses.push("#{key}")
+                    _buses[:entrance_3] = "#{key}"
+                    _busStops.push(:entrance_3)
                 end
 			end
-            puts buses
-            puts busStops
-            buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : text = "조회되는 버스가 없습니다."
+            _buses.length > 0 ? 
+            _text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행7000[1]: 사당역 하차\n직행7002[1]: 사당역 하차\n\n" : 
+            _text = "조회되는 버스가 없습니다."
 
-            busStops.each do |busStop|    
-				# buses.each do |bus|
+            _busStops.each do |busStop|    
                 #     # 예외처리 ?
-                    puts busStop
-					busNumText = "#{transport.busesInfo(busStop)[buses[busStop]][:number]}\n"
-					leftTimeText = "남은 시간: #{transport.busesInfo(busStop)[buses[busStop]][:leftTime]}분\n"
-					transport.busesInfo(busStop)[buses[busStop]][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(busStop)[buses[busStop]][:seats]}석\n"
-					transport.busesInfo(busStop)[buses[busStop]][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-					vehicleNumText = "차량 번호: #{transport.busesInfo(busStop)[buses[busStop]][:vehicleNum]}\n\n"
-					text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
-				# end
+                _busNumText = "#{@transport.busesInfo(busStop)[_buses[busStop]][:number]}\n"
+                _leftTimeText = "남은 시간: #{@transport.busesInfo(busStop)[_buses[busStop]][:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{@transport.busesInfo(busStop)[_buses[busStop]][:vehicleNum]}\n\n"
+
+                @transport.busesInfo(busStop)[_buses[busStop]][:seats] == "-1" ? 
+                _leftSeatText = '' : 
+                _leftSeatText = "남은 좌석: #{@transport.busesInfo(busStop)[_buses[busStop]][:seats]}석\n"
+
+                @transport.busesInfo(busStop)[_buses[busStop]][:isLowPlate] == "1" ? 
+                _isLowPlateText = "저상 버스: O\n" : 
+                _isLowPlateText = "저상 버스: X\n"
+
+                _text += _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 			end
-			text.chomp!
+			_text.chomp!
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("인천종합터미널")
-			transport = Crawler::Transport.new()
-			buses = []
-			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buses = []
 
-			transport.busesInfo(:highschool_2).each do |key, value|
-				buses.push("#{key}") if key.eql?('시외8862')
+			@transport.busesInfo(:highschool_2).each do |key, value|
+				_buses.push("#{key}") if key.eql?('시외8862')
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862: 인천터미널 하차\n\n" : text = "조회되는 버스가 없습니다."
+            _buses.length > 0 ? 
+            _text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862: 인천터미널 하차\n\n" : 
+            _text = "조회되는 버스가 없습니다."
 
-			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:highschool_1)[bus][:number]} [3]\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(:highschool_1)[bus][:leftTime]}분\n"
-				transport.busesInfo(:highschool_1)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:highschool_1)[bus][:seats]}석\n"
-				transport.busesInfo(:highschool_1)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(:highschool_1)[bus][:vehicleNum]}\n\n"
-				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			_buses.each do |bus|
+				_busNumText = "#{@transport.busesInfo(:highschool_1)[bus][:number]} [3]\n"
+				_leftTimeText = "남은 시간: #{@transport.busesInfo(:highschool_1)[bus][:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{@transport.busesInfo(:highschool_1)[bus][:vehicleNum]}\n\n"
+                
+                @transport.busesInfo(:highschool_1)[bus][:seats] == "-1" ? 
+                _leftSeatText = '' : 
+                _leftSeatText = "남은 좌석: #{@transport.busesInfo(:highschool_1)[bus][:seats]}석\n"
+
+                @transport.busesInfo(:highschool_1)[bus][:isLowPlate] == "1" ? 
+                _isLowPlateText = "저상 버스: O\n" : 
+                _isLowPlateText = "저상 버스: X\n"
+
+				_text += _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 			end
-
-			text.chomp!
+			_text.chomp!
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("인계동(나혜석거리)")
-			transport = Crawler::Transport.new()
-			buses = []
-			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buses = []
 
-			transport.busesInfo(:entrance_1).each do |key, value|
+			@transport.busesInfo(:entrance_1).each do |key, value|
 				if key.eql?('202') || key.eql?('80') || key.eql?('81') ||
 					key.eql?('88-1') || key.eql?('85') || key.eql?('99-2')
-					buses.push("#{key}")
+					_buses.push("#{key}")
 				end
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n202, 99-2 : 중소기업은행 하차\n80, 81, 85, 88-1 : 자유총연맹 하차\n\n" : text = "조회되는 버스가 없습니다."
+            _buses.length > 0 ? 
+            _text = "괄호 속 숫자는 정류장 번호입니다.\n\n202, 99-2 : 중소기업은행 하차\n80, 81, 85, 88-1 : 자유총연맹 하차\n\n" : 
+            _text = "조회되는 버스가 없습니다."
 
-			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
-				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
-				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
-				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			_buses.each do |bus|
+				_busNumText = "#{@transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
+				_leftTimeText = "남은 시간: #{@transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{@transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
+                
+                @transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? 
+                _leftSeatText = '' : 
+                _leftSeatText = "남은 좌석: #{@transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+                
+                @transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? 
+                _isLowPlateText = "저상 버스: O\n" : 
+                _isLowPlateText = "저상 버스: X\n"
+
+				_text += _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 			end
-
-			text.chomp!
+			_text.chomp!
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
 			render json: @msg, status: :ok
 
 		elsif @res.eql?("수원역")
-			transport = Crawler::Transport.new()
-			buses = []
-			buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buses = []
 
-			transport.busesInfo(:entrance_2).each do |key, value|
+			@transport.busesInfo(:entrance_2).each do |key, value|
 				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
 					key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
-					buses.push("#{key}")
+					_buses.push("#{key}")
 				end
 			end
 
-			buses.length > 0 ? text = "괄호 속 숫자는 정류장 번호입니다.\n\n모두 수원역.AK플라자 하차\n\n" : text = "조회되는 버스가 없습니다."
+            _buses.length > 0 ? 
+            _text = "괄호 속 숫자는 정류장 번호입니다.\n\n모두 수원역.AK플라자 하차\n\n" : 
+            _text = "조회되는 버스가 없습니다."
 
-			buses.each do |bus|
-				busNumText = "#{transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
-				leftTimeText = "남은 시간: #{transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
-				transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? leftSeatText = '' : leftSeatText = "남은 좌석: #{transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
-				transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? isLowPlateText = "저상 버스: O\n" : isLowPlateText = "저상 버스: X\n"
-				vehicleNumText = "차량 번호: #{transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
-				text += busNumText + leftTimeText + leftSeatText + isLowPlateText + vehicleNumText
+			_buses.each do |bus|
+				_busNumText = "#{@transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
+				_leftTimeText = "남은 시간: #{@transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{@transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
+                
+                @transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? 
+                _leftSeatText = '' : 
+                _leftSeatText = "남은 좌석: #{@transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+                
+                @transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? 
+                _isLowPlateText = "저상 버스: O\n" : 
+                _isLowPlateText = "저상 버스: X\n"
+
+				_text += _busNumText + _leftTimeText + _leftSeatText + _isLowPlateText + _vehicleNumText
 			end
-
-			text.chomp!
+			_text.chomp!
 
 			@msg = {
 				message: {
-					text: text
+					text: _text
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: buttons
+					buttons: _buttons
 				}
 			}
 
