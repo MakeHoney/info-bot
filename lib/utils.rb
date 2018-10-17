@@ -1,4 +1,5 @@
 # mixin
+
 module Utils
     def fixHtml(html)
         html.gsub!(/<[가-힣]/) {|s| s = '&lt;' + s[1]}
@@ -20,16 +21,16 @@ module Utils
 	# flags배열의 요소(elem)들 리턴값을 기준으로 버튼을 생성하여
 	# dynamicButtons에 버튼을 추가한다.
 	def dynamic(flags, tmpBuff, dynamicButtons, dynamicText = false)
-		cnt = 0;
+		_cnt = 0;
 
 		flags.each_with_index do |elem, i|
 			if elem
 				dynamicButtons.insert(cnt, tmpBuff[i])
 				dynamicText.replace("식당을 선택해주세요!") if dynamicText
-				cnt += 1
+				_cnt += 1
 			end
 			i += 1
 		end
 		return dynamicButtons
-	end
+    end
 end

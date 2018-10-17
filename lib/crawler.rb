@@ -1,19 +1,21 @@
 require 'open-uri'
 require 'nokogiri'
-require 'data_set'
-require 'utils'
-# Hash prettifier
 require 'pp'
 
 module Crawler
+    require_relative 'data_set'
+    require_relative 'utils'
+
     class SchoolFood
-        extend Utils
+        include Utils
 
-        _url = 'http://www.ajou.ac.kr/main/life/food.jsp'
-        _html = fixHtml(open(_url).read)
-        @page = Nokogiri::HTML(_html)
+        def initialize
+            _url = 'http://www.ajou.ac.kr/main/life/food.jsp'
+            _html = fixHtml(open(_url).read)
+            @page = Nokogiri::HTML(_html)
+        end
 
-		def self.studentFoodCourt
+		def studentFoodCourt
 			_retStr = ''
 			_flag = 0
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
@@ -31,7 +33,7 @@ module Crawler
 			end
 		end
 
-		def self.dormFoodCourt
+		def dormFoodCourt
 			_retHash = {
 				breakfast: '',
 				lunch: '',
@@ -74,7 +76,7 @@ module Crawler
 			return _retHash
 		end
 
-		def self.facultyFoodCourt
+		def facultyFoodCourt
 			_retHash = {
 				lunch: '',
 				dinner: '',
@@ -164,7 +166,7 @@ module Crawler
 
 
     # This class isn't on the product yet
-	class Notice
+    class Notice
         @codeForNotice = DataSet::ForCrawler.CodeForNotice
 		attr_accessor :totalNum
         
