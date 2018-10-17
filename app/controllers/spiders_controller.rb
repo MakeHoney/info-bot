@@ -180,7 +180,6 @@ class SpidersController < ApplicationController
             _food = Crawler::SchoolFood
             @dButtons = dynamic([
                 _food.studentFoodCourt,
-                _food.dormFoodCourt[:isOpen],
                 _food.facultyFoodCourt[:isOpen]
             ],
             ["학생식당", "교직원식당"],
@@ -201,7 +200,6 @@ class SpidersController < ApplicationController
             _food = Crawler::SchoolFood
             @dButtons = dynamic([
                 _food.studentFoodCourt,
-                _food.dormFoodCourt[:isOpen],
                 _food.facultyFoodCourt[:isOpen]
             ],
             ["학생식당", "교직원식당"],
@@ -222,7 +220,6 @@ class SpidersController < ApplicationController
             _food = Crawler::SchoolFood
             @dButtons = dynamic([
                 _food.studentFoodCourt,
-                _food.dormFoodCourt[:isOpen],
                 _food.facultyFoodCourt[:isOpen]
             ],
             ["학생식당", "교직원식당"],
@@ -264,8 +261,7 @@ class SpidersController < ApplicationController
             _food = Crawler::SchoolFood
             @dButtons = dynamic([
                 _food.studentFoodCourt,
-                _food.dormFoodCourt[:isOpen],
-                _food.facultyFoodCourt[:isOpen]
+                _food.dormFoodCourt[:isOpen]
             ],
             ["학생식당", "기숙사식당"],
             ["처음으로"]
@@ -285,8 +281,7 @@ class SpidersController < ApplicationController
             _food = Crawler::SchoolFood
             @dButtons = dynamic([
                 _food.studentFoodCourt,
-                _food.dormFoodCourt[:isOpen],
-                _food.facultyFoodCourt[:isOpen]
+                _food.dormFoodCourt[:isOpen]
             ],
             ["학생식당", "기숙사식당"],
             ["처음으로"]
