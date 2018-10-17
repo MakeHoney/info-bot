@@ -7,7 +7,9 @@ class SpidersController < ApplicationController
     include Utils
 
     def initialize
-        @dataSetForTransport = DataSet::ForController.ButtonInfoForTransport
+        _ButtonInfo = DataSet::ForController.ButtonInfoForTransport
+        @dataSetForTransport = _ButtonInfo[:metaData]
+        @buttonNames = _ButtonInfo[:name]
         @msg = {
             type: "buttons",
             buttons: ["도서관 여석 확인", "오늘의 학식", "교통 정보"]
@@ -324,26 +326,30 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-        elsif @res.eql?(@dataSetForTransport[:stop_1][:buttonName]) || 
-                @res.eql?(@dataSetForTransport[:stop_2][:buttonName]) ||
-                @res.eql?(@dataSetForTransport[:stop_3][:buttonName]) || 
-                @res.eql?(@dataSetForTransport[:stop_4][:buttonName]) ||
-                @res.eql?(@dataSetForTransport[:stop_5][:buttonName]) || 
-                @res.eql?(@dataSetForTransport[:stop_6][:buttonName])
+        elsif @res.eql?(@buttonNames[0]) || 
+                @res.eql?(@buttonNames[1]) ||
+                @res.eql?(@buttonNames[2]) || 
+                @res.eql?(@buttonNames[3]) ||
+                @res.eql?(@buttonNames[4]) || 
+                @res.eql?(@buttonNames[5])
             
             _transport = Crawler::Transport
             _base = ["교통 정보(돌아가기)", "처음으로"]
             _buttons = []
             _dataSet = nil
-
-			@dataSetForTransport.each do |key, value|
-				if value[:buttonName].eql?(@res)
-					_dataSet = value.dup
+            
+            _keys = @dataSetForTransport.keys
+			@buttonNames.each_with_index do |button, i|
+                if button.eql?(@res)
+                    _dataSet = @dataSetForTransport[_keys[i]].dup
 					break
 				end
-			end
+            end
+            
+            _buttonSymbol = _dataSet[:buttonSymbol]
+            _arrivalBuses = _transport.busesInfo(_buttonSymbol)
 
-			_transport.busesInfo(_dataSet[:buttonSymbol]).each do |key, value|
+			_arrivalBuses.each do |key, value|
 				_buttons.push("#{key}번#{_dataSet[:buttonIdx]}")
 			end
 
@@ -364,12 +370,9 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-        elsif @res.include?(@dataSetForTransport[:stop_1][:buttonIdx]) || 
-                @res.include?(@dataSetForTransport[:stop_2][:buttonIdx]) ||
-                @res.include?(@dataSetForTransport[:stop_3][:buttonIdx]) || 
-                @res.include?(@dataSetForTransport[:stop_4][:buttonIdx]) ||
-                @res.include?(@dataSetForTransport[:stop_5][:buttonIdx]) || 
-                @res.include?(@dataSetForTransport[:stop_6][:buttonIdx])
+        elsif @res.include?('[1]') || @res.include?('[2]') ||
+                @res.include?('[3]') || @res.include?('[4]') ||
+                @res.include?('[5]') || @res.include?('[6]')
             
             _transport = Crawler::Transport
             _dataSet = nil
@@ -379,20 +382,23 @@ class SpidersController < ApplicationController
 					break
 				end
 			end
-
-			_res = @res.dup
-            
+            _res = @res.dup
             @res.slice! "번#{_dataSet[:buttonIdx]}" # 버스 번호
-			_buttons = [_res, "교통 정보(돌아가기)", "처음으로"]
-			_busNumText = "#{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:number]}\n"
-			_leftTimeText = "남은 시간: #{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
-            _vehicleNumText = "차량 번호: #{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:vehicleNum]}"
-            
-            _transport.busesInfo(_dataSet[:buttonSymbol])[@res][:seats] == "-1" ? 
-            _leftSeatText = '' : 
-            _leftSeatText = "남은 좌석: #{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:seats]}석\n"
 
-            _transport.busesInfo(_dataSet[:buttonSymbol])[@res][:isLowPlate] == "1" ?
+            _buttonSymbol = _dataSet[:buttonSymbol]
+            _arrivalBuses = _transport.busesInfo(_buttonSymbol)
+            _bus = _arrivalBuses[@res]            
+                        
+			_buttons = [_res, "교통 정보(돌아가기)", "처음으로"]
+			_busNumText = "#{_bus[:number]}\n"
+			_leftTimeText = "남은 시간: #{_bus[:leftTime]}분\n"
+            _vehicleNumText = "차량 번호: #{_bus[:vehicleNum]}"
+            
+            _bus[:seats] == "-1" ? 
+            _leftSeatText = '' : 
+            _leftSeatText = "남은 좌석: #{_bus[:seats]}석\n"
+
+            _bus[:isLowPlate] == "1" ?
             _isLowPlateText = "저상 버스: O\n" : 
             _isLowPlateText = "저상 버스: X\n"
 

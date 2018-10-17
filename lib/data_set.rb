@@ -6,35 +6,40 @@ module DataSet
         end
         
         @ButtonInfoForTransport = {
-            stop_1: {
-                buttonName: "1. 아주대 정문 (맥날)",
-                buttonIdx: "[1]",
-                buttonSymbol: :entrance_1
-            },
-            stop_2: {
-                buttonName: "2. 아주대 정문 (KFC)",
-                buttonIdx: "[2]",
-                buttonSymbol: :entrance_2
-            },
-            stop_3: {
-                buttonName: "3. 창현고, 유신고",
-                buttonIdx: "[3]",
-                buttonSymbol: :highschool_1
-            },
-            stop_4: {
-                buttonName: "4. 창현고, 유신고",
-                buttonIdx: "[4]",
-                buttonSymbol: :highschool_2
-            },
-            stop_5: {
-                buttonName: "5. 아주대 후문",
-                buttonIdx: "[5]",
-                buttonSymbol: :entrance_3
-            },
-            stop_6: {
-                buttonName: "6. 아주대 후문",
-                buttonIdx: "[6]",
-                buttonSymbol: :entrance_4
+            name: [
+                "1. 아주대 정문 (맥날)",
+                "2. 아주대 정문 (KFC)",
+                "3. 창현고, 유신고",
+                "4. 창현고, 유신고",
+                "5. 아주대 후문",
+                "6. 아주대 후문"
+            ],
+            metaData: {
+                stop_1: {
+                    buttonIdx: "[1]",
+                    buttonSymbol: :entrance_1
+                },
+                stop_2: {
+                    buttonIdx: "[2]",
+                    buttonSymbol: :entrance_2
+                },
+                stop_3: {
+                    buttonIdx: "[3]",
+                    buttonSymbol: :highschool_1
+                },
+                stop_4: {
+                    buttonIdx: "[4]",
+                    buttonSymbol: :highschool_2
+                },
+                stop_5: {
+                    buttonIdx: "[5]",
+                    buttonSymbol: :entrance_3
+                },
+                stop_6: {
+                    buttonIdx: "[6]",
+                    buttonSymbol: :entrance_4
+                },
+                
             }
         }
 
