@@ -108,5 +108,18 @@ module DataSet
                 '241201006' => '마을7'
             }
         }
+
+        @CodeForNotice = {
+			'schoolAffair' => '76',	# 학사
+			'nonSubject' => '290',	# 비교과
+			'scholarship' => '77',	# 장학
+			'academic' => '78',		# 학술
+			'admission' => '79',	# 입학
+			'job' => '80',			# 취업
+			'office' => '84',		# 사무
+			'event' => '85',		# 행사
+			'etc' => '86',			# 기타
+			'paran' => '317'		# 파란학기제
+		}
     end
 end
