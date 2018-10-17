@@ -145,7 +145,7 @@ class SpidersController < ApplicationController
 
 			@msg = {
 				message: {
-					text: food.studentFoodCourt
+					text: _food.studentFoodCourt
 				},
 				keyboard: {
 					type: "buttons",
@@ -351,7 +351,7 @@ class SpidersController < ApplicationController
             _buttons.length > 0 ? 
             _text = "버스를 선택해 주세요!\n괄호 속 숫자는 정류장 번호입니다." : 
             _text = "조회되는 버스가 없습니다."
-			_buttons.concat(base)
+			_buttons.concat(_base)
 
 			@msg = {
 				message: {
