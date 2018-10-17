@@ -307,7 +307,9 @@ class SpidersController < ApplicationController
 		# 교통 정보 기능 #
 	    elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
 			_url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
-			_buttons = ["* 주요 지역 버스 운행 정보", "1. 아주대 정문 (맥날)", "2. 아주대 정문 (KFC)", "3. 창현고, 유신고", "4. 창현고, 유신고", "5. 아주대 후문", "6. 아주대 후문", "처음으로"]
+            _buttons = @buttonNames.dup
+            _buttons.unshift("* 주요 지역 버스 운행 정보")
+            _buttons.push("처음으로")
 
 			@msg = {
 				message: {
@@ -326,12 +328,9 @@ class SpidersController < ApplicationController
 
 			render json: @msg, status: :ok
 
-        elsif @res.eql?(@buttonNames[0]) || 
-                @res.eql?(@buttonNames[1]) ||
-                @res.eql?(@buttonNames[2]) || 
-                @res.eql?(@buttonNames[3]) ||
-                @res.eql?(@buttonNames[4]) || 
-                @res.eql?(@buttonNames[5])
+        elsif @res.eql?(@buttonNames[0]) || @res.eql?(@buttonNames[1]) ||
+                @res.eql?(@buttonNames[2]) || @res.eql?(@buttonNames[3]) ||
+                @res.eql?(@buttonNames[4]) || @res.eql?(@buttonNames[5])
             
             _transport = Crawler::Transport
             _base = ["교통 정보(돌아가기)", "처음으로"]
