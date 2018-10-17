@@ -85,10 +85,10 @@ class SpidersController < ApplicationController
 		elsif @res.eql?("C1 열람실 플러그 위치")
             _url = "https://postfiles.pstatic.net/MjAxODA0MTZfNDIg/MDAxNTIzODMwODc5Mjg5.oSjyfCT19ZS4XSE5_AqJGqH9piblcEpPX79vqHJFaVQg.gQi6gQmAX8FgvGh9FHFkY8I7ke2l8V3CrpYZRH0RPm0g.PNG.pourmonreve3/image_3411826531523830501839.png?type=w773"
             # 앱 내에서의 메시지 형태 확인하기
-            _text = " * 플러그의 위치에 병아리가 있어요.\n
-            왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
-            (하단의 이미지는 실시간 이미지가 아닙니다.)\n
-            349, 380, 405 or 412, 444, 468, 473"
+			_text = " * 플러그의 위치에 병아리가 있어요.\n
+					왼쪽 병아리부터 플러그와 가까운 자리 번호입니다.\n
+					(하단의 이미지는 실시간 이미지가 아닙니다.)\n
+					349, 380, 405 or 412, 444, 468, 473"
             
 			@msg = {
 				message: {
