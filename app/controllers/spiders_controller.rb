@@ -13,9 +13,9 @@ class SpidersController < ApplicationController
 
         # 세가지 인스턴스 분산시켜 초기화하기 (생성자 밖에서)
         # 생성자 안에서 모두 선언시 성능저하문제
-        @food = Crawler::SchoolFood.new()
-        @vacancy = Crawler::Vacancy.new()
-        @transport = Crawler::Transport.new()
+        @food = Crawler::SchoolFood
+        @vacancy = Crawler::Vacancy
+        @transport = Crawler::Transport
         @dButtons = dynamic([
             @food.studentFoodCourt,
             @food.dormFoodCourt[:isOpen],
@@ -395,10 +395,10 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: _buttons
-				}
-			}
-			render json: @msg, status: :ok
+                    buttons: _buttons
+                }
+            }
+            render json: @msg, status: :ok
 
 		elsif @res.eql?("* 주요 지역 버스 운행 정보")
 			_buttons = ["강남역", "사당역", "인천종합터미널", "인계동(나혜석거리)", "수원역", "교통 정보(돌아가기)", "처음으로"]

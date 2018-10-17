@@ -1,58 +1,38 @@
 require 'open-uri'
 require 'nokogiri'
-
+require 'data_set'
+require 'crawler_utils'
 # Hash prettifier
 require 'pp'
 
 module Crawler
-	class SchoolFood
-		def initialize
-			url = 'http://www.ajou.ac.kr/main/life/food.jsp'
+    class SchoolFood
+        extend Utils
 
-			# open(url)은 오브젝트명을 반환 open(url).read는 html문서 반환
-			html = fixHtml(open(url).read)
+        _url = 'http://www.ajou.ac.kr/main/life/food.jsp'
+        _html = fixHtml(open(_url).read)
+        @page = Nokogiri::HTML(_html)
 
-			@page = Nokogiri::HTML(html)
-		end
-
-		def fixHtml(html)
-			html.gsub!(/<[가-힣]/) {|s| s = '&lt;' + s[1]}
-			html.gsub!(/[가-힣]>/) {|s| s = s[0] + '&gt;'}
-			return html
-		end
-
-		def partition(string)
-			if (string.include?("<") || string.include?(">") ||
-				(string.include?("운영") && string.include?("시간")) ||
-				string.include?("Burger")) # && !string.include?("택") 을 넣을까..?
-				return true
-			else
-				return false
-			end
-		end
-
-
-		def studentFoodCourt
-			retStr = ''
-			flag = 0
+		def self.studentFoodCourt
+			_retStr = ''
+			_flag = 0
 			@page.css('table.ajou_table')[0].css('td.no_right li').each do |li|
-				retStr += "\n" if partition(li.text) && flag != 0
-				retStr += "#{li.text}\n"
-				flag += 1
-				# puts li.text
+				_retStr += "\n" if partition(li.text) && _flag != 0
+				_retStr += "#{li.text}\n"
+				_flag += 1
 			end
 
-			retStr.chomp!
+			_retStr.chomp!
 
-			if retStr.empty?
+			if _retStr.empty?
 				return false
 			else
-				return retStr
+				return _retStr
 			end
 		end
 
-		def dormFoodCourt
-			retHash = {
+		def self.dormFoodCourt
+			_retHash = {
 				breakfast: '',
 				lunch: '',
 				dinner: '',
@@ -60,85 +40,143 @@ module Crawler
 				isOpen: false
 			}
 
-			keys = retHash.keys
+			_keys = _retHash.keys
 
-			set = ['아침', '점심', '저녁', '분식']
-			cnt = 0
+			_set = ['아침', '점심', '저녁', '분식']
+			_cnt = 0
 
-			set.length.times do |i|
-				flag = 0
-				# 식단이 등록되어 있지 않은 경우 예외처리 => 변수 cnt와 xpath 이용
+			_set.length.times do |i|
 				# xpath는 index가 1부터 시작한다.
-				length_for_exption =
+				_flag = 0
+				_length_for_exption =
 				@page.xpath("//table[@class='ajou_table'][2]
-					//td[contains(text(), \"#{set[i]}\")]").length
+					//td[contains(text(), \"#{_set[i]}\")]").length
 
-				if length_for_exption == 0
-					retHash[keys[i]] = false
-					cnt -= 1
+				if _length_for_exption == 0
+					_retHash[_keys[i]] = false
+					_cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
-					css('td.no_right')[cnt + 1].		# 아침 점심 저녁 선택자
+					css('td.no_right')[_cnt + 1].		# 아침 점심 저녁 선택자
 					css('li').each do |li|
-						retHash[keys[i]] += "\n" if partition(li.text) && flag != 0
-						retHash[keys[i]] += "#{li.text}\n"
-						flag += 1
+						_retHash[_keys[i]] += "\n" if partition(li.text) && _flag != 0
+						_retHash[_keys[i]] += "#{li.text}\n"
+						_flag += 1
 					end
 
 				end
 
-				cnt += 1
-
-				# 아침, 점심, 저녁, 분식 중 하나라도 식단이 존재하면
-				# retStr[4]의 값을 true로 변경한다. 다시말해서,
-				# 모든 시간대의 식단이 없으면 retStr[4]의 값은 false이다.
-				# facultyFoodCourt() 메소드에서도 동일 알고리즘이 쓰인다.
-				retHash[:isOpen] = true if retHash[keys[i]]
-				retHash[keys[i]].chomp! if retHash[keys[i]]
+				_cnt += 1
+				_retHash[:isOpen] = true if _retHash[_keys[i]]
+				_retHash[_keys[i]].chomp! if _retHash[_keys[i]]
 
 			end
-			return retHash
+			return _retHash
 		end
 
-		def facultyFoodCourt
-			retHash = {
+		def self.facultyFoodCourt
+			_retHash = {
 				lunch: '',
 				dinner: '',
 				isOpen: false
 			}
 
-			keys = retHash.keys
+			_keys = _retHash.keys
 
-			set = ['점심', '저녁']
-			cnt = 0
+			_set = ['점심', '저녁']
+			_cnt = 0
 
-			set.length.times do |i|
+			_set.length.times do |i|
 
-				length_for_exption =
+				_length_for_exption =
 				@page.xpath("//table[@class='ajou_table'][3]
-					//td[contains(text(), \"#{set[i]}\")]").length
+					//td[contains(text(), \"#{_set[i]}\")]").length
 
-				if length_for_exption == 0
-					retHash[keys[i]] = false
+				if _length_for_exption == 0
+					_retHash[_keys[i]] = false
 				else
-					retHash[keys[i]] += "※ <중식 - 5,000원>\n" if i == 0
-					retHash[keys[i]] += "※ <석식 - 5,000원>\n" unless i == 0
+					_retHash[_keys[i]] += "※ <중식 - 5,000원>\n" if i == 0
+					_retHash[_keys[i]] += "※ <석식 - 5,000원>\n" unless i == 0
 					@page.css('table.ajou_table')[2].
-					css('td.no_right')[cnt + 1].
+					css('td.no_right')[_cnt + 1].
 					css('li').each do |li|
-						retHash[keys[i]] += "#{li.text}\n"
+						_retHash[_keys[i]] += "#{li.text}\n"
 					end
-					retHash[keys[i]] += "\n*운영시간 : 11:00 ~ 14:00\n" if i == 0
-					retHash[keys[i]] += "\n*운영시간 : 17:00 ~ 19:00\n" unless i == 0
+					_retHash[_keys[i]] += "\n*운영시간 : 11:00 ~ 14:00\n" if i == 0
+					_retHash[_keys[i]] += "\n*운영시간 : 17:00 ~ 19:00\n" unless i == 0
 				end
 
-				cnt += 1
-				retHash[:isOpen] = true if retHash[keys[i]]
-				retHash[keys[i]].chomp! if retHash[keys[i]]
+				_cnt += 1
+				_retHash[:isOpen] = true if _retHash[_keys[i]]
+				_retHash[_keys[i]].chomp! if _retHash[_keys[i]]
 
 			end
 
-			return retHash
+			return _retHash
+		end
+    end
+    
+    class Vacancy
+        @pages = []; @room = ['C1', 'D1']
+        @room.length.times do |i|
+            _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
+            _html = open(_url).read
+            @pages << Nokogiri::HTML(_html)
+        end
+        
+		def self.printVacancy
+			_retStr = ['', '']
+			_retStr.length.times do |i|	# C1, D1
+				_tmp = @pages[i].css('td[valign="middle"]')[1].text.split
+				_retStr[i] += "◆ #{@room[i]} 열람실의 이용 현황\n"
+				_retStr[i] += "  * 남은 자리 : #{_tmp[6]}\n"
+				_retStr[i] += "  * #{_tmp[10]} : #{_tmp[8].to_i - _tmp[6].to_i} / #{_tmp[8]} (#{_tmp[12]})"
+				_retStr[i].chomp! if _retStr[i]
+			end
+			return _retStr	# retStr이 empty일 때 예외처리하기
+		end
+	end
+
+    class Transport
+        @stations = DataSet::ForCrawler.StationInfoForTransport
+        @pages = {
+				entrance_1: '',
+				entrance_2: '',
+				entrance_3: '',
+				entrance_4: '',
+				highschool_1: '',
+				highschool_2: ''
+			}
+
+        @stations.each do |station, value|
+            if station != :busNum
+                _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
+                _html = open(_url).read
+                @pages[station] = Nokogiri::XML(_html)
+            end
+        end
+
+		def self.busesInfo(spotSymbol)
+			_buses = {}
+			_busInformations = {
+				number: '', 				# 버스 번호
+				leftTime: '',				# 남은 시간
+				seats: '',					# 남은 좌석
+				isLowPlate: '',		    	# 저상 여부
+				vehicleNum: ''		    	# 차량 번호
+			}
+
+			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
+				tmpKey = @stations[:busNum][busDesc.css('routeId').text]
+				_buses[tmpKey] = _busInformations.dup
+				_buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
+				_buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
+				_buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
+				_buses[tmpKey][:isLowPlate] = busDesc.css('lowPlate1').text
+				_buses[tmpKey][:vehicleNum] = busDesc.css('plateNo1').text
+			end
+
+			return _buses
 		end
 	end
 
@@ -198,140 +236,6 @@ module Crawler
 			iter.times do |i|
 				puts @page.css('.list_wrap a')[i].text
 			end
-		end
-	end
-
-	class Vacancy
-		def initialize
-			@pages = []; @room = ['C1', 'D1']
-			@room.length.times do |i|
-				url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
-				html = open(url).read
-				@pages << Nokogiri::HTML(html)
-			end
-		end
-		def printVacancy
-			retStr = ['', '']
-			retStr.length.times do |i|	# C1, D1
-				tmp = @pages[i].css('td[valign="middle"]')[1].text.split
-				retStr[i] += "◆ #{@room[i]} 열람실의 이용 현황\n"
-				retStr[i] += "  * 남은 자리 : #{tmp[6]}\n"
-				retStr[i] += "  * #{tmp[10]} : #{tmp[8].to_i - tmp[6].to_i} / #{tmp[8]} (#{tmp[12]})"
-				retStr[i].chomp! if retStr[i]
-			end
-			return retStr	# retStr이 empty일 때 예외처리하기
-		end
-	end
-
-	class Transport
-		@@stations = {
-			entrance_1: { 						# 정문 (맥날)
-				id: '203000066',
-				name: '아주대 정문 (맥날)'
-			},
-			entrance_2: { 						# 정문 (KFC)
-				id: '202000005',
-				name: '아주대 정문 (KFC)'
-			},
-			entrance_3: { 						# 후문
-				id: '202000042',
-				name: '아주대 후문[0]'
-			},
-			entrance_4: { 						# 후문 건너편
-				id: '202000041',
-				name: '아주대 후문[1]'
-			},
-			highschool_1: { 					# 창현, 유신고1
-				id: '202000039',
-				name: '창현, 유신고[0]'
-			},
-			highschool_2: { 					# 창현, 유신고2
-				id: '202000061',
-				name: '창현, 유신고[1]'
-			},
-			busNum: {
-				'200000070' => '11-1',
-				'200000185' => '13-4',
-				'200000211' => '18',
-				'200000157' => '2-2',
-				'200000053' => '20',
-				'223000100' => '202',
-				'200000064' => '32',
-				'200000236' => '32-3',
-				'200000272' => '32-4',
-				'200000206' => '5-4',
-				'200000231' => '54',
-				'234000024' => '720-1',
-				'234001608' => '720-1A',
-				'234000026' => '720-2',
-				'200000146' => '80',
-				'200000208' => '81',
-				'200000197' => '85',
-				'200000199' => '88-1',
-				'200000201' => '9-2',
-				'200000144' => '99',
-				'200000196' => '99-2',
-				'200000013' => '999',
-				'234000013' => '직행1007-1',
-				'200000145' => '직행3002',
-				'200000110' => '직행3007',
-				'200000274' => '직행3008',
-				'204000056' => '직행4000',
-				'200000112' => '직행7000',
-				'200000119' => '직행7001',
-				'200000109' => '직행7002',
-				'200000205' => '직행8800',
-				'241004760' => '시외8862',
-				'241201001' => '마을1',
-				'241201003' => '마을3',
-				'241201006' => '마을7'
-			}
-		}
-
-		def initialize
-			@pages = {
-				entrance_1: '',
-				entrance_2: '',
-				entrance_3: '',
-				entrance_4: '',
-				highschool_1: '',
-				highschool_2: ''
-			}
-
-			@@stations.each do |station, value|
-				# puts station
-				if station != :busNum
-					url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
-					html = open(url).read
-					@pages[station] = Nokogiri::XML(html)
-				end
-			end
-			# pp @pages
-		end
-
-		def busesInfo(spotSymbol)
-			buses = {}
-			busInformations = {
-				number: '', 				# 버스 번호
-				leftTime: '',				# 남은 시간
-				seats: '',					# 남은 좌석
-				isLowPlate: '',			# 저상 여부
-				vehicleNum: ''			# 차량 번호
-			}
-
-			# puts @pages[spotSymbol].css('resultMessage').text
-			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
-				tmpKey = @@stations[:busNum][busDesc.css('routeId').text]
-				buses[tmpKey] = busInformations.dup
-				buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
-				buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
-				buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
-				buses[tmpKey][:isLowPlate] = busDesc.css('lowPlate1').text
-				buses[tmpKey][:vehicleNum] = busDesc.css('plateNo1').text
-			end
-
-			# pp buses
-			return buses
 		end
 	end
 end
