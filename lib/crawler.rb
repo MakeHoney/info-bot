@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'nokogiri'
 require 'data_set'
-require 'crawler_utils'
+require 'utils'
 # Hash prettifier
 require 'pp'
 

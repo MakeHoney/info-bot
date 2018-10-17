@@ -1,5 +1,4 @@
 # mixin
-
 module DataSet
     class ForController
         class << self
