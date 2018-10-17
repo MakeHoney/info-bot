@@ -39,7 +39,7 @@ class SpidersController < ApplicationController
 			_url = "http://u-campus.ajou.ac.kr/ltms/temp/241.png?t=#{Time.now}"
 			@msg = {
 				message: {
-					text: _vacancy.printVacancy[0],
+					text: _vacancy.printVacancy("C1"),
 					photo: {
 						url: URI.encode(_url),
 						width: 720,
@@ -63,7 +63,7 @@ class SpidersController < ApplicationController
 			_url = "http://u-campus.ajou.ac.kr/ltms/temp/261.png?t=#{Time.now}"
 			@msg = {
 				message: {
-					text: _vacancy.printVacancy[1],
+					text: _vacancy.printVacancy("D1"),
 					photo: {
 						url: URI.encode(_url),
 						width: 720,

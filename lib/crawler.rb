@@ -117,43 +117,28 @@ module Crawler
     end
     
     class Vacancy
-        @pages = []; @room = ['C1', 'D1']
-        def self.printVacancy
-            @pages.clear
-            @room.length.times do |i|
-                _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
-                _html = open(_url).read
-                @pages << Nokogiri::HTML(_html)
-            end
+        def self.printVacancy room
+            _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{room}"
+            _html = open(_url).read
+            _page = Nokogiri::HTML(_html)
 
-			_retStr = ['', '']
-			_retStr.length.times do |i|	# C1, D1
-				_tmp = @pages[i].css('td[valign="middle"]')[1].text.split
-				_retStr[i] += "◆ #{@room[i]} 열람실의 이용 현황\n"
-				_retStr[i] += "  * 남은 자리 : #{_tmp[6]}\n"
-				_retStr[i] += "  * #{_tmp[10]} : #{_tmp[8].to_i - _tmp[6].to_i} / #{_tmp[8]} (#{_tmp[12]})"
-				_retStr[i].chomp! if _retStr[i]
-			end
-			return _retStr	# retStr이 empty일 때 예외처리하기
+            _tmp = _page.css('td[valign="middle"]')[1].text.split
+            _retStr = "◆ #{room} 열람실의 이용 현황\n"
+            _retStr += "  * 남은 자리 : #{_tmp[6]}\n"
+            _retStr += "  * #{_tmp[10]} : #{_tmp[8].to_i - _tmp[6].to_i} / #{_tmp[8]} (#{_tmp[12]})"
+            _retStr.chomp! if _retStr
+
+            # need exception handling for the case of retStr is empty
+			return _retStr
 		end
 	end
 
-
-    # Transport의 경우 singletone 적용시 성능 매우 느려짐
-    # 차라리 인스턴스 생성하는게 빠름
     class Transport
         _dataSet = DataSet::ForCrawler
         @stations = _dataSet.StationInfoForTransport
         @BusIDToNum = _dataSet.BusIDToNumberForTransport
-        @busInfoForm = {
-            number: '', 				# 버스 번호
-            leftTime: '',				# 남은 시간
-            seats: '',					# 남은 좌석
-            isLowPlate: '',		    	# 저상 여부
-            vehicleNum: ''		    	# 차량 번호
-        }
 
-		def self.busesInfo(spotSymbol)
+		def self.busesInfo spotSymbol
 			_buses = {}
             _id = @stations[spotSymbol][:id]
             _busNum = @BusIDToNum
@@ -164,7 +149,7 @@ module Crawler
 
             _page.css('busArrivalList').each do |busDesc|
                 tmpKey = _busNum[busDesc.css('routeId').text]
-                _buses[tmpKey] = @busInfoForm.dup
+                _buses[tmpKey] = {}
                 _bus = _buses[tmpKey]
 				_bus[:number] = "* #{tmpKey}번 버스 *"
 				_bus[:leftTime] = busDesc.css('predictTime1').text
@@ -177,12 +162,14 @@ module Crawler
 		end
 	end
 
+
+    # This class isn't on the product yet
 	class Notice
         @codeForNotice = DataSet::ForCrawler.CodeForNotice
 		attr_accessor :totalNum
         
         # Notice class도 single tone pattern이 적용 가능할지 고민하기
-		def initialize(key)
+		def initialize key
 			@home = 'http://www.ajou.ac.kr'
 			_notice = @home + '/new/ajou/notice.jsp'
 
@@ -211,7 +198,7 @@ module Crawler
 			return _entireNumOfPost
 		end
 
-		def printNotice(userNumOfNotice)
+		def printNotice userNumOfNotice
 			# userNumOfNotice : 유저 개개인이 printNotice 재실행 전까지 본 공지글의 수
 			_newNotice = @totalNum - userNumOfNotice
 			puts "총 #{_newNotice}개의 새로운 공지가 있습니다."
