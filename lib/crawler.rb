@@ -118,8 +118,8 @@ module Crawler
     
     class Vacancy
         @pages = []; @room = ['C1', 'D1']
-        
         def self.printVacancy
+            @pages.clear
             @room.length.times do |i|
                 _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
                 _html = open(_url).read
@@ -141,13 +141,13 @@ module Crawler
     class Transport
         @stations = DataSet::ForCrawler.StationInfoForTransport
         @pages = {
-				entrance_1: '',
-				entrance_2: '',
-				entrance_3: '',
-				entrance_4: '',
-				highschool_1: '',
-				highschool_2: ''
-			}
+            entrance_1: '',
+            entrance_2: '',
+            entrance_3: '',
+            entrance_4: '',
+            highschool_1: '',
+            highschool_2: ''
+        }
 
         @stations.each do |station, value|
             if station != :busNum
