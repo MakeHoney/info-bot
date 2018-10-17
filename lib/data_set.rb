@@ -42,7 +42,8 @@ module DataSet
 
     class ForCrawler
         class << self
-            attr_accessor :StationInfoForTransport
+            attr_accessor :StationInfoForTransport,
+                          :CodeForNotice
         end
         
         @StationInfoForTransport = {

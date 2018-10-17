@@ -239,20 +239,6 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		# elsif @res.eql?("분식")
-		# 	food = Crawler::SchoolFood.new()
-
-		# 	@msg = {
-		# 		message: {
-		# 			text: food.dormFoodCourt[:isOpen]
-		# 		},
-		# 		keyboard: {
-		# 			type: "buttons",
-		# 			buttons: @dButtons
-		# 		}
-		# 	}
-		# 	render json: @msg, status: :ok
-
         elsif @res.eql?("교직원식당")
             _food = Crawler::SchoolFood
 			_dynamicButtons = dynamic([
