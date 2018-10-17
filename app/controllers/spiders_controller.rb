@@ -380,9 +380,9 @@ class SpidersController < ApplicationController
 				end
 			end
 
-            @res.slice! "번#{_dataSet[:buttonIdx]}" # 버스 번호
-            
 			_res = @res.dup
+            
+            @res.slice! "번#{_dataSet[:buttonIdx]}" # 버스 번호
 			_buttons = [_res, "교통 정보(돌아가기)", "처음으로"]
 			_busNumText = "#{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:number]}\n"
 			_leftTimeText = "남은 시간: #{_transport.busesInfo(_dataSet[:buttonSymbol])[@res][:leftTime]}분\n"
