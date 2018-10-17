@@ -25,12 +25,44 @@ module Utils
 
 		flags.each_with_index do |elem, i|
 			if elem
-				dynamicButtons.insert(cnt, tmpBuff[i])
+				dynamicButtons.insert(_cnt, tmpBuff[i])
 				dynamicText.replace("식당을 선택해주세요!") if dynamicText
 				_cnt += 1
 			end
 			i += 1
 		end
 		return dynamicButtons
+    end
+
+    def foodInfo id
+        _retStr = ''
+        _path = File.expand_path('..', File.dirname(__FILE__)) + '/scheduler/food/' + id
+
+        case id
+
+        when 'stuFoodCourt'
+            lines = IO.readlines(_path, 'r')
+            lines.each do |line|
+                _retStr += line
+            end
+
+            return _retStr.empty? ? false : _retStr
+
+        when 'dormIsOpen', 'facuIsOpen'
+            lines = IO.readlines(_path, 'r')
+            lines.each do |line|
+                _retStr += line
+            end
+
+            return _retStr == 'false' ? false : true
+
+        else
+            lines = IO.readlines(_path, 'r')
+            lines.each do |line|
+                _retStr += line
+            end
+
+            return _retStr == 'false' ? false : _retStr
+        end
     end
 end

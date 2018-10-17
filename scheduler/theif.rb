@@ -11,28 +11,36 @@ def theif
     
     _files = {
         stuFoodCourt: {
-            name: _lumberroomAddr + '/stuFoodCourt.txt',
+            name: _lumberroomAddr + '/stuFoodCourt',
             contents: _stuFoodCourt
         },  
         dormBreakfast: {
-            name: _lumberroomAddr + '/dormBreakfast.txt',
+            name: _lumberroomAddr + '/dormBreakfast',
             contents: _dormFoodCourt[:breakfast]
         },
         dormLunch: {
-            name: _lumberroomAddr + '/dormLunch.txt',
+            name: _lumberroomAddr + '/dormLunch',
             contents: _dormFoodCourt[:lunch]
         },
         dormDinner: {
-            name: _lumberroomAddr + '/dormDinner.txt',
+            name: _lumberroomAddr + '/dormDinner',
             contents: _dormFoodCourt[:dinner]
         },
+        dormIsOpen: {
+            name: _lumberroomAddr + '/dormIsOpen',
+            content: _dormFoodCourt[:isOpen]
+        },
         facuLunch: {
-            name: _lumberroomAddr + '/facuLunch.txt',
+            name: _lumberroomAddr + '/facuLunch',
             contents: _facuFoodCourt[:lunch]
         },
         facuDinner: {
-            name: _lumberroomAddr + '/facuDinner.txt',
+            name: _lumberroomAddr + '/facuDinner',
             contents: _facuFoodCourt[:dinner]
+        },
+        facuIsOpen: {
+            name: _lumberroomAddr + '/facuIsOpen',
+            contents: _facuFoodCourt[:isOpen]
         }
     }
 
