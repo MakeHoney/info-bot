@@ -142,47 +142,38 @@ module Crawler
     # Transport의 경우 singletone 적용시 성능 매우 느려짐
     # 차라리 인스턴스 생성하는게 빠름
     class Transport
-        @stations = DataSet::ForCrawler.StationInfoForTransport
-
+        _dataSet = DataSet::ForCrawler
+        @stations = _dataSet.StationInfoForTransport
+        @BusIDToNum = _dataSet.BusIDToNumberForTransport
+        @busInfoForm = {
+            number: '', 				# 버스 번호
+            leftTime: '',				# 남은 시간
+            seats: '',					# 남은 좌석
+            isLowPlate: '',		    	# 저상 여부
+            vehicleNum: ''		    	# 차량 번호
+        }
 
 		def self.busesInfo(spotSymbol)
 			_buses = {}
-			_busInformations = {
-				number: '', 				# 버스 번호
-				leftTime: '',				# 남은 시간
-				seats: '',					# 남은 좌석
-				isLowPlate: '',		    	# 저상 여부
-				vehicleNum: ''		    	# 차량 번호
-            }
-            _pages = {
-                entrance_1: '',
-                entrance_2: '',
-                entrance_3: '',
-                entrance_4: '',
-                highschool_1: '',
-                highschool_2: ''
-            }
-    
-            @stations.each do |station, value|
-                if station != :busNum
-                    _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
-                    _html = open(_url).read
-                    _pages[station] = Nokogiri::XML(_html)
-                    puts 'i'
-                end
+            _id = @stations[spotSymbol][:id]
+            _busNum = @BusIDToNum
+
+            _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{_id}"
+            _html = open(_url).read
+            _page = Nokogiri::XML(_html)
+
+            _page.css('busArrivalList').each do |busDesc|
+                tmpKey = _busNum[busDesc.css('routeId').text]
+                _buses[tmpKey] = @busInfoForm.dup
+                _bus = _buses[tmpKey]
+				_bus[:number] = "* #{tmpKey}번 버스 *"
+				_bus[:leftTime] = busDesc.css('predictTime1').text
+				_bus[:seats] = busDesc.css('remainSeatCnt1').text
+				_bus[:isLowPlate] = busDesc.css('lowPlate1').text
+				_bus[:vehicleNum] = busDesc.css('plateNo1').text
             end
 
-			_pages[spotSymbol].css('busArrivalList').each do |busDesc|
-				tmpKey = @stations[:busNum][busDesc.css('routeId').text]
-				_buses[tmpKey] = _busInformations.dup
-				_buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
-				_buses[tmpKey][:leftTime] = busDesc.css('predictTime1').text
-				_buses[tmpKey][:seats] = busDesc.css('remainSeatCnt1').text
-				_buses[tmpKey][:isLowPlate] = busDesc.css('lowPlate1').text
-				_buses[tmpKey][:vehicleNum] = busDesc.css('plateNo1').text
-			end
-
-			return _buses
+			 _buses
 		end
 	end
 
