@@ -118,13 +118,14 @@ module Crawler
     
     class Vacancy
         @pages = []; @room = ['C1', 'D1']
-        @room.length.times do |i|
-            _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
-            _html = open(_url).read
-            @pages << Nokogiri::HTML(_html)
-        end
         
-		def self.printVacancy
+        def self.printVacancy
+            @room.length.times do |i|
+                _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{@room[i]}"
+                _html = open(_url).read
+                @pages << Nokogiri::HTML(_html)
+            end
+
 			_retStr = ['', '']
 			_retStr.length.times do |i|	# C1, D1
 				_tmp = @pages[i].css('td[valign="middle"]')[1].text.split
