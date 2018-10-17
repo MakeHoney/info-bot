@@ -427,8 +427,9 @@ class SpidersController < ApplicationController
             _transport = Crawler::Transport
 			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 			_buses = []
+            _ent1ArrivalBuses = _transport.busesInfo(:entrance_1)
 
-			_transport.busesInfo(:entrance_1).each do |key, value|
+			_ent1ArrivalBuses.each do |key, value|
 				_buses.push("#{key}") if key.eql?('직행3007') || key.eql?('직행3008')
 			end
 
@@ -436,16 +437,17 @@ class SpidersController < ApplicationController
             _text = "괄호 속 숫자는 정류장 번호입니다.\n\n직행3007: 강남역.역삼세무서 하차\n직행3008: 강남역나라빌딩앞 하차\n\n" : 
             _text = "조회되는 버스가 없습니다."
 
-			_buses.each do |bus|
-				_busNumText = "#{_transport.busesInfo(:entrance_1)[bus][:number]} [1]\n"
-				_leftTimeText = "남은 시간: #{_transport.busesInfo(:entrance_1)[bus][:leftTime]}분\n"
-                _vehicleNumText = "차량 번호: #{_transport.busesInfo(:entrance_1)[bus][:vehicleNum]}\n\n"
+            _buses.each do |bus|
+                bus = _ent1ArrivalBuses[bus]
+				_busNumText = "#{bus[:number]} [1]\n"
+				_leftTimeText = "남은 시간: #{bus[:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{bus[:vehicleNum]}\n\n"
                 
-                _transport.busesInfo(:entrance_1)[bus][:seats] == "-1" ? 
+                bus[:seats] == "-1" ? 
                 _leftSeatText = '' : 
-                _leftSeatText = "남은 좌석: #{_transport.busesInfo(:entrance_1)[bus][:seats]}석\n"
+                _leftSeatText = "남은 좌석: #{bus[:seats]}석\n"
 
-                _transport.busesInfo(:entrance_1)[bus][:isLowPlate] == "1" ? 
+                bus[:isLowPlate] == "1" ? 
                 _isLowPlateText = "저상 버스: O\n" : 
                 _isLowPlateText = "저상 버스: X\n"
 
@@ -472,7 +474,10 @@ class SpidersController < ApplicationController
             _busStops = []
             _buses = {}
 
-			_transport.busesInfo(:entrance_1).each do |key, value|
+            _ent1ArrivalBuses = _transport.busesInfo(:entrance_1)
+            _ent3ArrivalBuese = _transport.busesInfo(:entrance_3)
+
+			_ent1ArrivalBuses.each do |key, value|
                 if key.eql?('직행7000')
                     # _buses.push("#{key}")
                     # 아래 구조(buses[:entrance_1] = key 의 구조)는 임시 방편
@@ -482,7 +487,7 @@ class SpidersController < ApplicationController
                 end
 			end
 
-            _transport.busesInfo(:entrance_3).each do |key, value|
+            _ent3ArrivalBuese.each do |key, value|
                 if key.eql?('직행7002')
                     # _buses.push("#{key}")
                     _buses[:entrance_3] = "#{key}"
@@ -495,15 +500,17 @@ class SpidersController < ApplicationController
 
             _busStops.each do |busStop|    
                 #     # 예외처리 ?
-                _busNumText = "#{_transport.busesInfo(busStop)[_buses[busStop]][:number]}\n"
-                _leftTimeText = "남은 시간: #{_transport.busesInfo(busStop)[_buses[busStop]][:leftTime]}분\n"
-                _vehicleNumText = "차량 번호: #{_transport.busesInfo(busStop)[_buses[busStop]][:vehicleNum]}\n\n"
+                _bus = _transport.busesInfo(busStop)[_buses[busStop]]
 
-                _transport.busesInfo(busStop)[_buses[busStop]][:seats] == "-1" ? 
+                _busNumText = "#{_bus[:number]}\n"
+                _leftTimeText = "남은 시간: #{_bus[:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{_bus[:vehicleNum]}\n\n"
+
+                _bus[:seats] == "-1" ? 
                 _leftSeatText = '' : 
-                _leftSeatText = "남은 좌석: #{_transport.busesInfo(busStop)[_buses[busStop]][:seats]}석\n"
+                _leftSeatText = "남은 좌석: #{_bus[:seats]}석\n"
 
-                _transport.busesInfo(busStop)[_buses[busStop]][:isLowPlate] == "1" ? 
+                _bus[:isLowPlate] == "1" ? 
                 _isLowPlateText = "저상 버스: O\n" : 
                 _isLowPlateText = "저상 버스: X\n"
 
@@ -526,9 +533,12 @@ class SpidersController < ApplicationController
         elsif @res.eql?("인천종합터미널")
             _transport = Crawler::Transport
 			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
-			_buses = []
+            _buses = []
+            
+            _high1ArrivalBuses = _transport.busesInfo(:highschool_1)
+            _high2ArrivalBuses = _transport.busesInfo(:highschool_2)
 
-			_transport.busesInfo(:highschool_2).each do |key, value|
+			_high2ArrivalBuses.each do |key, value|
 				_buses.push("#{key}") if key.eql?('시외8862')
 			end
 
@@ -536,16 +546,17 @@ class SpidersController < ApplicationController
             _text = "괄호 속 숫자는 정류장 번호입니다.\n\n시외8862: 인천터미널 하차\n\n" : 
             _text = "조회되는 버스가 없습니다."
 
-			_buses.each do |bus|
-				_busNumText = "#{_transport.busesInfo(:highschool_1)[bus][:number]} [3]\n"
-				_leftTimeText = "남은 시간: #{_transport.busesInfo(:highschool_1)[bus][:leftTime]}분\n"
-                _vehicleNumText = "차량 번호: #{_transport.busesInfo(:highschool_1)[bus][:vehicleNum]}\n\n"
+            _buses.each do |bus|
+                bus = _high1ArrivalBuses[bus]
+				_busNumText = "#{bus[:number]} [3]\n"
+				_leftTimeText = "남은 시간: #{bus[:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{bus[:vehicleNum]}\n\n"
                 
-                _transport.busesInfo(:highschool_1)[bus][:seats] == "-1" ? 
+                bus[:seats] == "-1" ? 
                 _leftSeatText = '' : 
-                _leftSeatText = "남은 좌석: #{_transport.busesInfo(:highschool_1)[bus][:seats]}석\n"
+                _leftSeatText = "남은 좌석: #{bus[:seats]}석\n"
 
-                _transport.busesInfo(:highschool_1)[bus][:isLowPlate] == "1" ? 
+                bus[:isLowPlate] == "1" ? 
                 _isLowPlateText = "저상 버스: O\n" : 
                 _isLowPlateText = "저상 버스: X\n"
 
@@ -568,9 +579,12 @@ class SpidersController < ApplicationController
         elsif @res.eql?("인계동(나혜석거리)")
             _transport = Crawler::Transport
 			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
-			_buses = []
+            _buses = []
+            
+            _ent1ArrivalBuses = _transport.busesInfo(:entrance_1)
+            _ent2ArrivalBuses = _transport.busesInfo(:entrance_2)
 
-			_transport.busesInfo(:entrance_1).each do |key, value|
+			_ent1ArrivalBuses.each do |key, value|
 				if key.eql?('202') || key.eql?('80') || key.eql?('81') ||
 					key.eql?('88-1') || key.eql?('85') || key.eql?('99-2')
 					_buses.push("#{key}")
@@ -581,16 +595,17 @@ class SpidersController < ApplicationController
             _text = "괄호 속 숫자는 정류장 번호입니다.\n\n202, 99-2 : 중소기업은행 하차\n80, 81, 85, 88-1 : 자유총연맹 하차\n\n" : 
             _text = "조회되는 버스가 없습니다."
 
-			_buses.each do |bus|
-				_busNumText = "#{_transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
-				_leftTimeText = "남은 시간: #{_transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
-                _vehicleNumText = "차량 번호: #{_transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
+            _buses.each do |bus|
+                bus = _ent2ArrivalBuses[bus]
+				_busNumText = "#{bus[:number]} [2]\n"
+				_leftTimeText = "남은 시간: #{bus[:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{bus[:vehicleNum]}\n\n"
                 
-                _transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? 
+                bus[:seats] == "-1" ? 
                 _leftSeatText = '' : 
-                _leftSeatText = "남은 좌석: #{_transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+                _leftSeatText = "남은 좌석: #{bus[:seats]}석\n"
                 
-                _transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? 
+                bus[:isLowPlate] == "1" ? 
                 _isLowPlateText = "저상 버스: O\n" : 
                 _isLowPlateText = "저상 버스: X\n"
 
@@ -613,9 +628,11 @@ class SpidersController < ApplicationController
         elsif @res.eql?("수원역")
             _transport = Crawler::Transport
 			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
-			_buses = []
+            _buses = []
+            
+            _ent2ArrivalBuses = _transport.busesInfo(:entrance_2)
 
-			_transport.busesInfo(:entrance_2).each do |key, value|
+			_ent2ArrivalBuses.each do |key, value|
 				if key.eql?('720-2') || key.eql?('13-4') || key.eql?('9-2') || key.eql?('11-1')||
 					key.eql?('32-4') || key.eql?('32-3') || key.eql?('32')
 					_buses.push("#{key}")
@@ -626,16 +643,17 @@ class SpidersController < ApplicationController
             _text = "괄호 속 숫자는 정류장 번호입니다.\n\n모두 수원역.AK플라자 하차\n\n" : 
             _text = "조회되는 버스가 없습니다."
 
-			_buses.each do |bus|
-				_busNumText = "#{_transport.busesInfo(:entrance_2)[bus][:number]} [2]\n"
-				_leftTimeText = "남은 시간: #{_transport.busesInfo(:entrance_2)[bus][:leftTime]}분\n"
-                _vehicleNumText = "차량 번호: #{_transport.busesInfo(:entrance_2)[bus][:vehicleNum]}\n\n"
+            _buses.each do |bus|
+                bus = _ent2ArrivalBuses[bus]
+				_busNumText = "#{bus[:number]} [2]\n"
+				_leftTimeText = "남은 시간: #{bus[:leftTime]}분\n"
+                _vehicleNumText = "차량 번호: #{bus[:vehicleNum]}\n\n"
                 
-                _transport.busesInfo(:entrance_2)[bus][:seats] == "-1" ? 
+                bus[:seats] == "-1" ? 
                 _leftSeatText = '' : 
-                _leftSeatText = "남은 좌석: #{_transport.busesInfo(:entrance_2)[bus][:seats]}석\n"
+                _leftSeatText = "남은 좌석: #{bus[:seats]}석\n"
                 
-                _transport.busesInfo(:entrance_2)[bus][:isLowPlate] == "1" ? 
+                bus[:isLowPlate] == "1" ? 
                 _isLowPlateText = "저상 버스: O\n" : 
                 _isLowPlateText = "저상 버스: X\n"
 

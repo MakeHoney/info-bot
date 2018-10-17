@@ -138,24 +138,12 @@ module Crawler
 		end
 	end
 
+
+    # Transport의 경우 singletone 적용시 성능 매우 느려짐
+    # 차라리 인스턴스 생성하는게 빠름
     class Transport
         @stations = DataSet::ForCrawler.StationInfoForTransport
-        @pages = {
-            entrance_1: '',
-            entrance_2: '',
-            entrance_3: '',
-            entrance_4: '',
-            highschool_1: '',
-            highschool_2: ''
-        }
 
-        @stations.each do |station, value|
-            if station != :busNum
-                _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
-                _html = open(_url).read
-                @pages[station] = Nokogiri::XML(_html)
-            end
-        end
 
 		def self.busesInfo(spotSymbol)
 			_buses = {}
@@ -165,9 +153,26 @@ module Crawler
 				seats: '',					# 남은 좌석
 				isLowPlate: '',		    	# 저상 여부
 				vehicleNum: ''		    	# 차량 번호
-			}
+            }
+            _pages = {
+                entrance_1: '',
+                entrance_2: '',
+                entrance_3: '',
+                entrance_4: '',
+                highschool_1: '',
+                highschool_2: ''
+            }
+    
+            @stations.each do |station, value|
+                if station != :busNum
+                    _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{value[:id]}"
+                    _html = open(_url).read
+                    _pages[station] = Nokogiri::XML(_html)
+                    puts 'i'
+                end
+            end
 
-			@pages[spotSymbol].css('busArrivalList').each do |busDesc|
+			_pages[spotSymbol].css('busArrivalList').each do |busDesc|
 				tmpKey = @stations[:busNum][busDesc.css('routeId').text]
 				_buses[tmpKey] = _busInformations.dup
 				_buses[tmpKey][:number] = "* #{tmpKey}번 버스 *"
