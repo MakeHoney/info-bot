@@ -237,8 +237,8 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("교직원식당")
 			_dynamicButtons = dynamic([
-                _food.facultyFoodCourt[:lunch],
-                _food.facultyFoodCourt[:dinner]
+                foodInfo('facuLunch'),
+                foodInfo('facuDinner')
             ],
 			["[교]중식", "[교]석식"],
             ["처음으로"]
