@@ -299,7 +299,7 @@ class SpidersController < ApplicationController
 	    elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
 			_url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
             _buttons = @buttonNames.dup
-            _buttons.unshift("* 주요 지역 버스 운행 정보")
+            _buttons.unshift("0. 주요 지역 버스 운행 정보")
             _buttons.push("처음으로")
 
 			@msg = {
@@ -405,7 +405,7 @@ class SpidersController < ApplicationController
             }
             render json: @msg, status: :ok
 
-		elsif @res.eql?("* 주요 지역 버스 운행 정보")
+		elsif @res.eql?("0. 주요 지역 버스 운행 정보")
 			_buttons = ["강남역", "사당역", "인천종합터미널", "인계동(나혜석거리)", "수원역", "교통 정보(돌아가기)", "처음으로"]
 
 			@msg = {
@@ -421,7 +421,7 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("강남역")
             _transport = Crawler::Transport
-			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["0. 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
 			_buses = []
             _ent1ArrivalBuses = _transport.busesInfo(:entrance_1)
 
@@ -466,7 +466,7 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("사당역")
             _transport = Crawler::Transport
-			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["0. 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
             _busStops = []
             _buses = {}
 
@@ -528,7 +528,7 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("인천종합터미널")
             _transport = Crawler::Transport
-			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["0. 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
             _buses = []
             
             _high1ArrivalBuses = _transport.busesInfo(:highschool_1)
@@ -574,7 +574,7 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("인계동(나혜석거리)")
             _transport = Crawler::Transport
-			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["0. 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
             _buses = []
             
             _ent1ArrivalBuses = _transport.busesInfo(:entrance_1)
@@ -623,7 +623,7 @@ class SpidersController < ApplicationController
 
         elsif @res.eql?("수원역")
             _transport = Crawler::Transport
-			_buttons = ["* 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
+			_buttons = ["0. 주요 지역 버스 운행 정보", "교통 정보(돌아가기)", "처음으로"]
             _buses = []
             
             _ent2ArrivalBuses = _transport.busesInfo(:entrance_2)
