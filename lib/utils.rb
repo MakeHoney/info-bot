@@ -1,12 +1,14 @@
 # mixin
 
 module Utils
+    
     def fixHtml html
         html.gsub!(/<[가-힣]/) {|s| s = '&lt;' + s[1]}
         html.gsub!(/[가-힣]>/) {|s| s = s[0] + '&gt;'}
         return html
     end
 
+    # Method for arranging a string partially
     def partition string
         if (string.include?("<") || string.include?(">") ||
             (string.include?("운영") && string.include?("시간")) ||
@@ -17,9 +19,7 @@ module Utils
         end
     end
 
-    # 버튼을 동적으로 구성하게끔 만들어주는 메소드
-	# flags배열의 요소(elem)들 리턴값을 기준으로 버튼을 생성하여
-	# dynamicButtons에 버튼을 추가한다.
+    # Method for creating dynamic button
 	def dynamic flags, tmpBuff, dynamicButtons, dynamicText = false
 		_cnt = 0;
 
@@ -34,6 +34,7 @@ module Utils
 		return dynamicButtons
     end
 
+    # Method that read crawling data from food dir and see if the data is valid or not
     def foodInfo id
         _retStr = ''
         _path = File.expand_path('..', File.dirname(__FILE__)) + '/scheduler/food/' + id
