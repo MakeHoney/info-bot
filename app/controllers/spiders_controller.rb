@@ -23,7 +23,8 @@ class SpidersController < ApplicationController
 	def chat
         @res = params[:content]
         @user_key = params[:user_key]
-		
+        
+        # LIBRARY #
 		if @res.eql?("도서관 여석 확인")
 			@msg = {
 				message: {
@@ -54,7 +55,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["D1 열람실", "C1 열람실 플러그 위치", "처음으로"]
+					buttons: ["D1 열람실", "C1 열람실", "C1 열람실 플러그 위치", "처음으로"]
 				}
 			}
 
@@ -78,7 +79,7 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["C1 열람실", "처음으로"]
+					buttons: ["C1 열람실", "D1 열람실", "처음으로"]
 				}
 			}
 
@@ -103,12 +104,13 @@ class SpidersController < ApplicationController
 				},
 				keyboard: {
 					type: "buttons",
-					buttons: ["D1 열람실", "처음으로"]
+					buttons: ["C1 열람실", "D1 열람실", "처음으로"]
 				}
 			}
 
 			render json: @msg, status: :ok
 
+        # FOOD #
         elsif @res.eql?("오늘의 학식")
             _defaultText = "오늘은 식당을 운영하지 않습니다."
 			_dynamicText = _defaultText
@@ -295,7 +297,7 @@ class SpidersController < ApplicationController
 			}
 			render json: @msg, status: :ok
 
-		# 교통 정보 기능 #
+		# TRANSPORT #
 	    elsif @res.eql?("교통 정보") || @res.eql?("교통 정보(돌아가기)")
 			_url = "https://user-images.githubusercontent.com/31656287/43041816-71b7ccf0-8da6-11e8-95bd-d50a521b7ed2.jpg"
             _buttons = @buttonNames.dup
