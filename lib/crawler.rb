@@ -3,17 +3,17 @@ require 'nokogiri'
 require 'pp'
 
 module Crawler
-    require_relative 'data_set'
-    require_relative 'utils'
+	require_relative 'data_set'
+	require_relative 'utils'
 
-    class SchoolFood
-        include Utils
+	class SchoolFood
+		include Utils
 
-        def initialize
-            _url = 'http://www.ajou.ac.kr/main/life/food.jsp'
-            _html = fixHtml(open(_url).read)
-            @page = Nokogiri::HTML(_html)
-        end
+		def initialize
+			_url = 'http://www.ajou.ac.kr/main/life/food.jsp'
+			_html = fixHtml(open(_url).read)
+			@page = Nokogiri::HTML(_html)
+		end
 
 		def studentFoodCourt
 			_retStr = ''
@@ -51,7 +51,7 @@ module Crawler
 				# xpath는 index가 1부터 시작한다.
 				_flag = 0
 				_length_for_exption =
-				@page.xpath("//table[@class='ajou_table'][2]
+					@page.xpath("//table[@class='ajou_table'][2]
 					//td[contains(text(), \"#{_set[i]}\")]").length
 
 				if _length_for_exption == 0
@@ -59,7 +59,7 @@ module Crawler
 					_cnt -= 1
 				else
 					@page.css('table.ajou_table')[1].
-					css('td.no_right')[_cnt + 1].		# 아침 점심 저녁 선택자
+						css('td.no_right')[_cnt + 1].		# 아침 점심 저녁 선택자
 					css('li').each do |li|
 						_retHash[_keys[i]] += "\n" if partition(li.text) && _flag != 0
 						_retHash[_keys[i]] += "#{li.text}\n"
@@ -91,7 +91,7 @@ module Crawler
 			_set.length.times do |i|
 
 				_length_for_exption =
-				@page.xpath("//table[@class='ajou_table'][3]
+					@page.xpath("//table[@class='ajou_table'][3]
 					//td[contains(text(), \"#{_set[i]}\")]").length
 
 				if _length_for_exption == 0
@@ -100,8 +100,8 @@ module Crawler
 					_retHash[_keys[i]] += "※ <중식 - 5,000원>\n" if i == 0
 					_retHash[_keys[i]] += "※ <석식 - 5,000원>\n" unless i == 0
 					@page.css('table.ajou_table')[2].
-					css('td.no_right')[_cnt + 1].
-					css('li').each do |li|
+						css('td.no_right')[_cnt + 1].
+						css('li').each do |li|
 						_retHash[_keys[i]] += "#{li.text}\n"
 					end
 					_retHash[_keys[i]] += "\n*운영시간 : 11:00 ~ 14:00\n" if i == 0
@@ -116,61 +116,61 @@ module Crawler
 
 			return _retHash
 		end
-    end
-    
-    class Vacancy
-        def self.printVacancy room
-            _url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{room}"
-            _html = open(_url).read
-            _page = Nokogiri::HTML(_html)
+	end
 
-            _tmp = _page.css('td[valign="middle"]')[1].text.split
-            _retStr = "◆ #{room} 열람실의 이용 현황\n"
-            _retStr += "  * 남은 자리 : #{_tmp[6]}\n"
-            _retStr += "  * #{_tmp[10]} : #{_tmp[8].to_i - _tmp[6].to_i} / #{_tmp[8]} (#{_tmp[12]})"
-            _retStr.chomp! if _retStr
+	class Vacancy
+		def self.printVacancy room
+			_url = "http://u-campus.ajou.ac.kr/ltms/rmstatus/vew.rmstatus?bd_code=JL&rm_code=JL0#{room}"
+			_html = open(_url).read
+			_page = Nokogiri::HTML(_html)
 
-            # need exception handling for the case of retStr is empty
+			_tmp = _page.css('td[valign="middle"]')[1].text.split
+			_retStr = "◆ #{room} 열람실의 이용 현황\n"
+			_retStr += "  * 남은 자리 : #{_tmp[6]}\n"
+			_retStr += "  * #{_tmp[10]} : #{_tmp[8].to_i - _tmp[6].to_i} / #{_tmp[8]} (#{_tmp[12]})"
+			_retStr.chomp! if _retStr
+
+			# need exception handling for the case of retStr is empty
 			return _retStr
 		end
 	end
 
-    class Transport
-        _dataSet = DataSet::ForCrawler
-        @stations = _dataSet.StationInfoForTransport
-        @BusIDToNum = _dataSet.BusIDToNumberForTransport
+	class Transport
+		_dataSet = DataSet::ForCrawler
+		@stations = _dataSet.StationInfoForTransport
+		@BusIDToNum = _dataSet.BusIDToNumberForTransport
 
 		def self.busesInfo spotSymbol
 			_buses = {}
-            _id = @stations[spotSymbol][:id]
-            _busNum = @BusIDToNum
+			_id = @stations[spotSymbol][:id]
+			_busNum = @BusIDToNum
 
-            _url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{_id}"
-            _html = open(_url).read
-            _page = Nokogiri::XML(_html)
+			_url = "http://www.gbis.go.kr/gbis2014/openAPI.action?cmd=busarrivalservicestation&serviceKey=1234567890&stationId=#{_id}"
+			_html = open(_url).read
+			_page = Nokogiri::XML(_html)
 
-            _page.css('busArrivalList').each do |busDesc|
-                tmpKey = _busNum[busDesc.css('routeId').text]
-                _buses[tmpKey] = {}
-                _bus = _buses[tmpKey]
+			_page.css('busArrivalList').each do |busDesc|
+				tmpKey = _busNum[busDesc.css('routeId').text]
+				_buses[tmpKey] = {}
+				_bus = _buses[tmpKey]
 				_bus[:number] = "* #{tmpKey}번 버스 *"
 				_bus[:leftTime] = busDesc.css('predictTime1').text
 				_bus[:seats] = busDesc.css('remainSeatCnt1').text
 				_bus[:isLowPlate] = busDesc.css('lowPlate1').text
 				_bus[:vehicleNum] = busDesc.css('plateNo1').text
-            end
+			end
 
-			 _buses
+			_buses
 		end
 	end
 
 
-    # This class isn't on the product yet
-    class Notice
-        @codeForNotice = DataSet::ForCrawler.CodeForNotice
+	# This class isn't on the product yet
+	class Notice
+		@codeForNotice = DataSet::ForCrawler.CodeForNotice
 		attr_accessor :totalNum
-        
-        # Notice class도 single tone pattern이 적용 가능할지 고민하기
+
+		# Notice class도 single tone pattern이 적용 가능할지 고민하기
 		def initialize key
 			@home = 'http://www.ajou.ac.kr'
 			_notice = @home + '/new/ajou/notice.jsp'
